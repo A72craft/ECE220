@@ -1,6 +1,24 @@
-;
-;
-;
+;Introduction
+;This program does a "reverse polish notation" 
+;1.The user types in numbers from 0-9, +-*/^,or "space" and =
+;	A [CHECK_NUMBER] and [CHECK_OP] subroutines will check 
+;	if the input is a number, operator or invalid.
+;2.1.If the input is a number, It will be [PUSH]ed onto the stack, then back
+;	 to input
+;2.2.If the input is not a number, it will be checked if it is one
+;	 of the following: +-*/^"space"= 
+;2.3.{+-*/^=} will be continued, "space" will sent the program back to input
+;3.1.For {+-*/^}, first two numbers will be poped from the stack,
+; 	 the first number poped will be assigned R3 and the second R4,
+;	 so it is always R4 operand R3. After it is done, push the number
+;	 back onto the stack
+;3.2.For =, first check if the stack have only one value. If true, 
+;	 save that number to R5 and print it in Hex
+;4.Exceptions: Under such cases, print"Invalid Expression"
+;			1.Stack underflow (when poping numbers)
+;			2.input character invalid(when[Check]is ran)
+;			3.stack have not one value(when "=")
+;partners:jinj2(me)
 .ORIG x3000
 	
 ;your code goes here
