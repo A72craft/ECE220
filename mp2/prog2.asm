@@ -18,10 +18,25 @@
 ;			1.Stack underflow (when poping numbers)
 ;			2.input character invalid(when[Check]is ran)
 ;			3.stack have not one value(when "=")
+;R0
 ;partners:jinj2(me)
 .ORIG x3000
 	
+ZERO .FILL x30
+NINE .FILL x39
+ADDI .FILL x2B
+MINUS .FILL x2D
+TIMES .FILL x2E
+DIVS .FILL x2F
+POWS .FILL x5E
+SPACE .FILL x20
+EQUAL .FILL x3D
 ;your code goes here
+	GETC
+	OUT
+
+CHECK_NUMBER
+	LD R1,
 	
 
 
