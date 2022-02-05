@@ -10,7 +10,8 @@
 //	PRINT_STUFF       3011
 //	NUMBERS           301A
 //	PRINT_STUFF_FIN   301A
-//	ZERO              301E
-//	NINE              301F
-//	A                 3020
+//	SIXT              301E
+//	ZERO              301F
+//	NINE              3020
+//	A                 3021
 

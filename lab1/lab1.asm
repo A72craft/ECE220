@@ -7,7 +7,7 @@
 ;R6 is negitive 9
 ;shifting to the left is times 2
 	AND R3,R3,#0
-	ADD R3,R3,#15
+	LD R3, SIXT
 PRINT_HEX
 	AND R1,R1,#0
 	ADD R1,R1,#4
@@ -47,7 +47,8 @@ PRINT_STUFF_FIN
 	ADD R1,R1,#-1
 	BRp OUTER_LOOP
 	HALT
-	
+
+SIXT .FILL x0010
 ZERO .FILL x30
 NINE .FILL x39
 A .FILL x41

@@ -22,7 +22,7 @@
 ;	and holding the number after it is processed by the operand
 ;R1 is for tempery value holding, mostly used in getting the 
 ;	negitive
-;R2 not used
+;R2 is used in EXP as a inner 
 ;R3 is for the number at the top of the stack and STACK_START
 ;R4 is for the number at the second place of the stack and STACK_TOP
 ;R5 is for holding the final result and the exception for POP and PUSH
@@ -153,8 +153,47 @@ POP_TWO
 	ADD R4,R0,#0
 	RET
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;R3- value to print in hexadecimal
+;R5- value to print in hexadecimal
 PRINT_HEX
+	ST R5,Save_R5
+	AND R1,R1,#0
+	ADD R1,R1,#4
+OUTER_LOOP
+	AND R0,R0,#0
+	AND R2,R2,#0
+	ADD R2,R2,#4
+;;;;;
+INNER_LOOP
+	ADD R0,R0,R0
+	ADD R5,R5,#0
+	BRn ADD_ONE
+	ADD R0,R0,#0
+	BRnzp INNER_LOOP_FIN
+ADD_ONE
+	ADD R0,R0,#1
+INNER_LOOP_FIN
+	ADD R5,R5,R5
+	ADD R2,R2,#-1
+	BRp INNER_LOOP
+	BRnzp PRINT_STUFF
+;;;;;	
+PRINT_STUFF
+	LD R4,ZERO
+	ADD R0,R0,R4
+	LD R6,NINE
+	NOT R6,R6
+	ADD R6,R6,#1
+	ADD R4,R6,R0
+	BRnz NUMBERS
+	ADD R0,R0,#7
+	BRnzp PRINT_STUFF_FIN
+NUMBERS
+
+PRINT_STUFF_FIN
+	OUT
+	ADD R1,R1,#-1
+	BRp OUTER_LOOP
+	LD R5,Save_R5
 	HALT
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;
@@ -200,7 +239,7 @@ MUL
 	ST R7,Save_R7
 	JSR POP_TWO
 	LD R7,Save_R7
-	ADD R1,R3,#-1		;R4 adds to itself for (R3-1) times
+	ADD R1,R3,#0		;R4 adds to itself for R3 times
 	AND R0,R0,#0
 LOOP_MUL
 	ADD R0,R0,R4
@@ -214,16 +253,16 @@ LOOP_MUL
 DIV	
 ;your code goes here
 	ST R7,Save_R7
-	JSR POP_TWO
+	JSR POP_TWO			;pop two numbers, R4/R3
 	LD R7,Save_R7
-	AND R0,R0,#0
-	ADD R1,R3,#0
+	AND R0,R0,#0		
+	ADD R1,R3,#0		;set R0 to R3
 	ST R7,Save_R7
-	JSR NEG
+	JSR NEG				;set R0(R3) to negitive
 	LD R7,Save_R7
 LOOP_DIV
-	ADD R4,R4,R3
-	BRnz END_DIV
+	ADD R4,R4,R1
+	BRn END_DIV
 	ADD R0,R0,#1
 	BRnzp LOOP_DIV
 END_DIV
@@ -238,16 +277,18 @@ END_DIV
 EXP
 ;your code goes here
 	ST R7,Save_R7
-	JSR POP_TWO
+	JSR POP_TWO			;pop two numbers from the stack to R3 and R4
 	LD R7,Save_R7
 	ADD R1,R3,#-1		;R4 times itself for (R3-1) times
 	AND R0,R0,#0
 	ADD R3,R4,#0
 LOOP_EXP
-	ST R7,Save_R7
-	JSR MUL				;need to call MUV to do it 
-	LD R7,Save_R7
-	ADD R4,R0,#0
+	AND R2,R2,#0
+	ADD R2,R2,R3
+LOOP_EXP_IN
+	ADD R0,R0,R4
+	ADD R2,R2,#-1
+	BRp LOOP_EXP_IN
 	ADD R1,R1,#-1
 	BRp LOOP_EXP
 	BRnzp PUSH_RESULT
@@ -326,12 +367,13 @@ ZERO .FILL x30
 NINE .FILL x39
 ADDI .FILL x2B
 MINUS .FILL x2D
-TIME .FILL x2E
+TIME .FILL x2A
 DIVS .FILL x2F
 POWS .FILL x5E
 SPACE .FILL x20
 EQUAL .FILL x3D
 Save_R7     .BLKW #1
+Save_R5     .BLKW #1
 POP_SaveR3	.BLKW #1	;
 POP_SaveR4	.BLKW #1	;
 STACK_END	.FILL x3FF0	;
