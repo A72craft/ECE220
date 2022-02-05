@@ -52,13 +52,63 @@ CHECK_NUMBER
 	LD R7,Save_R7
 	ADD R1,R1,R0
 	BRp CHECK_OP
+	ST R7,Save_R7
 	JSR PUSH
+	LD R7,Save_R7
 	ADD R5,R5,#0
 	BRn EXCEPT
-	JSR LOOP
+	JMP LOOP
 
 CHECK_OP
-	
+;Check if it is "+"
+	LD R1,ADDI; load the ASCII of "+" into R1
+	ST R7,Save_R7
+	JSR NEG   ;  set R1 to its negitive
+	LD R7,Save_R7
+	ADD R1,R1,R0
+	BRz PLUS
+;Check if it is "-"
+	LD R1,MINUS; load the ASCII of "-" into R1
+	ST R7,Save_R7
+	JSR NEG   ;  set R1 to its negitive
+	LD R7,Save_R7
+	ADD R1,R1,R0
+	BRz MIN
+;Check if it is "*"
+	LD R1,TIME; load the ASCII of "*" into R1
+	ST R7,Save_R7
+	JSR NEG   ;  set R1 to its negitive
+	LD R7,Save_R7
+	ADD R1,R1,R0
+	BRz MUL
+;Check if it is "/"
+	LD R1,DIVS; load the ASCII of "/" into R1
+	ST R7,Save_R7
+	JSR NEG   ;  set R1 to its negitive
+	LD R7,Save_R7
+	ADD R1,R1,R0
+	BRz DIV
+;Check if it is "^"
+	LD R1,POWS; load the ASCII of "^" into R1
+	ST R7,Save_R7
+	JSR NEG   ;  set R1 to its negitive
+	LD R7,Save_R7
+	ADD R1,R1,R0
+	BRz EXP
+;Check if it is "space"
+	LD R1,SPACE; load the ASCII of "space" into R1
+	ST R7,Save_R7
+	JSR NEG   ;  set R1 to its negitive
+	LD R7,Save_R7
+	ADD R1,R1,R0
+	BRz SPACE_OP
+;Check if it is "="
+	LD R1,EQUAL; load the ASCII of "=" into R1
+	ST R7,Save_R7
+	JSR NEG   ;  set R1 to its negitive
+	LD R7,Save_R7
+	ADD R1,R1,R0
+	BRz EQUAL_OP
 	
 	
 	
@@ -78,11 +128,13 @@ CHECK_OP
 PRINT_HEX
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;R0 - character input from keyboard
-;R6 - current numerical output
 ;
 ;
-EVALUATE
+EXCEPT
+	LD R0,EXCEPTION_MESSAGE
+	OUT
+	HALT
+	
 
 ;your code goes here
 
@@ -217,6 +269,7 @@ NEG
 	ADD R1,R1,#1
 	RET
 	
+EXCEPTION_MESSAGE .STRINGZ "Invalid Expression"
 Save_R7     .BLKW #1
 POP_SaveR3	.BLKW #1	;
 POP_SaveR4	.BLKW #1	;
