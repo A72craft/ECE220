@@ -2,3 +2,15 @@
 // Scope level 0:
 //	Symbol Name       Page Address
 //	----------------  ------------
+//	PRINT_HEX         3002
+//	OUTER_LOOP        3004
+//	INNER_LOOP        3007
+//	ADD_ONE           300C
+//	INNER_LOOP_FIN    300D
+//	PRINT_STUFF       3011
+//	NUMBERS           301A
+//	PRINT_STUFF_FIN   301A
+//	ZERO              301E
+//	NINE              301F
+//	A                 3020
+

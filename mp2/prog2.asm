@@ -63,7 +63,7 @@ CHECK_NUMBER
 	LD R7,Save_R7
 	ADD R5,R5,#0
 	BRp EXCEPT
-	JMP LOOP
+	BRnzp LOOP
 
 CHECK_OP
 ;Check if it is "+"
@@ -115,7 +115,7 @@ CHECK_OP
 	LD R7,Save_R7
 	ADD R1,R1,R0
 	BRz EQUAL_OP
-	JMP EXCEPT
+	BRnzp EXCEPT
 	
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;	
 
@@ -134,7 +134,7 @@ EQUAL_OP
 	ADD R5,R5,#0
 	BRp EXCEPT
 	ADD R5,R0,#0
-	JMP PRINT_HEX
+	BRnzp PRINT_HEX
 	
 	
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -161,7 +161,7 @@ PRINT_HEX
 ;
 EXCEPT
 	LD R0,EXCEPTION_MESSAGE
-	OUT
+	PUTS
 	HALT
 	
 
@@ -177,7 +177,7 @@ PLUS					;adds the value in R3 and R4
 	JSR POP_TWO
 	LD R7,Save_R7
 	ADD,R0,R3,R4
-	JMP PUSH_RESULT
+	BRnzp PUSH_RESULT
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;input R3, R4
 ;out R0
@@ -191,7 +191,7 @@ MIN
 	JSR NEG				;it in R1, then add R1 to R4
 	LD R7,Save_R7
 	ADD,R0,R4,R1
-	JMP PUSH_RESULT
+	BRnzp PUSH_RESULT
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;input R3, R4
 ;out R0
@@ -206,7 +206,7 @@ LOOP_MUL
 	ADD R0,R0,R4
 	ADD R1,R1,#-1
 	BRp LOOP_MUL
-	JMP PUSH_RESULT
+	BRnzp PUSH_RESULT
 	
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;input R3, R4
@@ -227,7 +227,7 @@ LOOP_DIV
 	ADD R0,R0,#1
 	BRnzp LOOP_DIV
 END_DIV
-	JMP PUSH_RESULT
+	BRnzp PUSH_RESULT
 	
 	
 	
@@ -250,7 +250,7 @@ LOOP_EXP
 	ADD R4,R0,#0
 	ADD R1,R1,#-1
 	BRp LOOP_EXP
-	JMP PUSH_RESULT
+	BRnzp PUSH_RESULT
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 PUSH_RESULT ;in R0
 	ST R7,Save_R7
@@ -258,7 +258,7 @@ PUSH_RESULT ;in R0
 	LD R7,Save_R7
 	ADD R5,R5,#0
 	BRp EXCEPT
-	JMP LOOP
+	BRnzp LOOP
 	
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;	
 ;IN:R0, OUT:R5 (0-success, 1-fail/overflow)
