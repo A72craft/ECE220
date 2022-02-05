@@ -18,7 +18,7 @@
 ;			1.Stack underflow (when poping numbers)
 ;			2.input character invalid(when[Check]is ran)
 ;			3.stack have not one value(when "=")
-;R0
+;R0 is for keeping the thing that is typed by the user
 ;partners:jinj2(me)
 .ORIG x3000
 	
@@ -32,11 +32,28 @@ POWS .FILL x5E
 SPACE .FILL x20
 EQUAL .FILL x3D
 ;your code goes here
+LOOP
 	GETC
 	OUT
 
 CHECK_NUMBER
-	LD R1,
+	LD R1,ZERO; load 0 into R1
+	JSR NEG   ;  set R1 to its negitive
+	ADD R1,R1,R0
+	BRn CHECK_OP
+	LD R1,NINE; load 9 into R1
+	JSR NEG   ;  set R1 to its negitive
+	ADD R1,R1,R0
+	BRp CHECK_OP
+	JSR PUSH
+	ADD R5,R5,#0
+	BRn EXCEPT
+	JSR LOOP
+
+CHECK_OP
+	
+	
+	
 	
 
 
@@ -147,8 +164,13 @@ DONE_POP
 	LD R3, POP_SaveR3	;
 	LD R4, POP_SaveR4	;
 	RET
-
-
+	
+;In R1, out R1(but it is negitive)
+NEG
+	NOT R1,R1
+	ADD R1,R1,#1
+	RET
+	
 POP_SaveR3	.BLKW #1	;
 POP_SaveR4	.BLKW #1	;
 STACK_END	.FILL x3FF0	;
