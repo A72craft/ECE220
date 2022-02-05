@@ -31,28 +31,20 @@
 ;partners:jinj2(me)
 .ORIG x3000
 	
-ZERO .FILL x30
-NINE .FILL x39
-ADDI .FILL x2B
-MINUS .FILL x2D
-TIME .FILL x2E
-DIVS .FILL x2F
-POWS .FILL x5E
-SPACE .FILL x20
-EQUAL .FILL x3D
+
 ;your code goes here
 LOOP
 	GETC
 	OUT
 
 CHECK_NUMBER
-	LD R1,ZERO; load 0 into R1
+	LD R1,ZERO ; load 0 into R1
 	ST R7,Save_R7
 	JSR NEG   ;  set R1 to its negitive
 	LD R7,Save_R7
 	ADD R1,R1,R0
 	BRn CHECK_OP
-	LD R1,NINE; load 9 into R1
+	LD R1,NINE   ; load 9 into R1
 	ST R7,Save_R7
 	JSR NEG   ;  set R1 to its negitive
 	LD R7,Save_R7
@@ -67,62 +59,65 @@ CHECK_NUMBER
 
 CHECK_OP
 ;Check if it is "+"
-	LD R1,ADDI; load the ASCII of "+" into R1
+	LD R1,ADDI   ; load the ASCII of "+" into R1
 	ST R7,Save_R7
 	JSR NEG   ;  set R1 to its negitive
 	LD R7,Save_R7
 	ADD R1,R1,R0
 	BRz PLUS
 ;Check if it is "-"
-	LD R1,MINUS; load the ASCII of "-" into R1
+	LD R1,MINUS    ; load the ASCII of "-" into R1
 	ST R7,Save_R7
 	JSR NEG   ;  set R1 to its negitive
 	LD R7,Save_R7
 	ADD R1,R1,R0
 	BRz MIN
 ;Check if it is "*"
-	LD R1,TIME; load the ASCII of "*" into R1
+	LD R1,TIME    ; load the ASCII of "*" into R1
 	ST R7,Save_R7
 	JSR NEG   ;  set R1 to its negitive
 	LD R7,Save_R7
 	ADD R1,R1,R0
 	BRz MUL
 ;Check if it is "/"
-	LD R1,DIVS; load the ASCII of "/" into R1
+	LD R1,DIVS    ; load the ASCII of "/" into R1
 	ST R7,Save_R7
 	JSR NEG   ;  set R1 to its negitive
 	LD R7,Save_R7
 	ADD R1,R1,R0
 	BRz DIV
 ;Check if it is "^"
-	LD R1,POWS; load the ASCII of "^" into R1
+	LD R1,POWS     ; load the ASCII of "^" into R1
 	ST R7,Save_R7
 	JSR NEG   ;  set R1 to its negitive
 	LD R7,Save_R7
 	ADD R1,R1,R0
 	BRz EXP
 ;Check if it is "space"
-	LD R1,SPACE; load the ASCII of "space" into R1
+	LD R1,SPACE     ; load the ASCII of "space" into R1
 	ST R7,Save_R7
 	JSR NEG   ;  set R1 to its negitive
 	LD R7,Save_R7
 	ADD R1,R1,R0
 	BRz SPACE_OP
 ;Check if it is "="
-	LD R1,EQUAL; load the ASCII of "=" into R1
+	LD R1,EQUAL     ; load the ASCII of "=" into R1
 	ST R7,Save_R7
 	JSR NEG   ;  set R1 to its negitive
 	LD R7,Save_R7
 	ADD R1,R1,R0
 	BRz EQUAL_OP
 	BRnzp EXCEPT
-	
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+SPACE_OP
+	BRnzp LOOP
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;	
 
 EQUAL_OP
 	LD R3, STACK_START	;
 	LD R4, STACK_TOP	;
-	ADD R1,R4,#-1
+	ADD R1,R4,#1
 	ST R7,Save_R7
 	JSR NEG   ;  set R1 to its negitive
 	LD R7,Save_R7
@@ -155,12 +150,12 @@ POP_TWO
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;R3- value to print in hexadecimal
 PRINT_HEX
-
+	HALT
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;
 ;
 EXCEPT
-	LD R0,EXCEPTION_MESSAGE
+	LEA R0,EXCEPTION_MESSAGE
 	PUTS
 	HALT
 	
@@ -176,7 +171,7 @@ PLUS					;adds the value in R3 and R4
 	ST R7,Save_R7
 	JSR POP_TWO
 	LD R7,Save_R7
-	ADD,R0,R3,R4
+	ADD R0,R3,R4
 	BRnzp PUSH_RESULT
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;input R3, R4
@@ -186,11 +181,11 @@ MIN
 	ST R7,Save_R7
 	JSR POP_TWO
 	LD R7,Save_R7
-	ADD,R1,R3,#0		;first set R3 to its negitive and put 
+	ADD R1,R3,#0		;first set R3 to its negitive and put 
 	ST R7,Save_R7
 	JSR NEG				;it in R1, then add R1 to R4
 	LD R7,Save_R7
-	ADD,R0,R4,R1
+	ADD R0,R4,R1
 	BRnzp PUSH_RESULT
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;input R3, R4
@@ -321,13 +316,23 @@ NEG
 	ADD R1,R1,#1
 	RET
 	
-EXCEPTION_MESSAGE .STRINGZ "Invalid Expression"
+
+ZERO .FILL x30
+NINE .FILL x39
+ADDI .FILL x2B
+MINUS .FILL x2D
+TIME .FILL x2E
+DIVS .FILL x2F
+POWS .FILL x5E
+SPACE .FILL x20
+EQUAL .FILL x3D
 Save_R7     .BLKW #1
 POP_SaveR3	.BLKW #1	;
 POP_SaveR4	.BLKW #1	;
 STACK_END	.FILL x3FF0	;
 STACK_START	.FILL x4000	;
 STACK_TOP	.FILL x4000	;
+EXCEPTION_MESSAGE .STRINGZ "'Invalid Expression'"
 
 
 .END
