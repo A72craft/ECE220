@@ -22,6 +22,12 @@
 ;	and holding the number after it is processed by the operand
 ;R1 is for tempery value holding, mostly used in getting the 
 ;	negitive
+;R2 not used
+;R3 is for the number at the top of the stack and STACK_START
+;R4 is for the number at the second place of the stack and STACK_TOP
+;R5 is for holding the final result and the exception for POP and PUSH
+;R6 not used 
+;R7 is for PC when JSR and RET in subroutines
 ;partners:jinj2(me)
 .ORIG x3000
 	
@@ -109,13 +115,28 @@ CHECK_OP
 	LD R7,Save_R7
 	ADD R1,R1,R0
 	BRz EQUAL_OP
+	JMP EXCEPT
+	
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;	
+
+EQUAL_OP
+	LD R3, STACK_START	;
+	LD R4, STACK_TOP	;
+	ADD R1,R4,#-1
+	ST R7,Save_R7
+	JSR NEG   ;  set R1 to its negitive
+	LD R7,Save_R7
+	ADD R1,R1,R3
+	BRnp EXCEPT
+	ST R7,Save_R7
+	JSR POP   ;  POP the last number in the stack
+	LD R7,Save_R7
+	ADD R5,R5,#0
+	BRp EXCEPT
+	ADD R5,R0,#0
+	JMP PRINT_HEX
 	
 	
-	
-
-
-
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 POP_TWO
 	ST R7,Save_R7
