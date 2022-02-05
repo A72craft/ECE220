@@ -56,7 +56,7 @@ CHECK_NUMBER
 	JSR PUSH
 	LD R7,Save_R7
 	ADD R5,R5,#0
-	BRn EXCEPT
+	BRp EXCEPT
 	JMP LOOP
 
 CHECK_OP
@@ -116,13 +116,21 @@ CHECK_OP
 
 
 
-
-
-
-
-
-
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+POP_TWO
+	ST R7,Save_R7
+	JSR POP
+	LD R7,Save_R7
+	ADD R5,R5,#0
+	BRp EXCEPT
+	ADD R3,R0,#0
+	ST R7,Save_R7
+	JSR POP
+	LD R7,Save_R7
+	ADD R5,R5,#0
+	BRp EXCEPT
+	ADD R4,R0,#0
+	RET
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;R3- value to print in hexadecimal
 PRINT_HEX
@@ -144,37 +152,49 @@ EXCEPT
 ;out R0
 PLUS					;adds the value in R3 and R4
 ;your code goes here
+	ST R7,Save_R7
+	JSR POP_TWO
+	LD R7,Save_R7
 	ADD,R0,R3,R4
-	RET
+	JMP PUSH_RESULT
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;input R3, R4
 ;out R0
 MIN	
 ;your code goes here
+	ST R7,Save_R7
+	JSR POP_TWO
+	LD R7,Save_R7
 	ADD,R1,R3,#0		;first set R3 to its negitive and put 
 	ST R7,Save_R7
 	JSR NEG				;it in R1, then add R1 to R4
 	LD R7,Save_R7
 	ADD,R0,R4,R1
-	RET
+	JMP PUSH_RESULT
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;input R3, R4
 ;out R0
 MUL	
 ;your code goes here
+	ST R7,Save_R7
+	JSR POP_TWO
+	LD R7,Save_R7
 	ADD R1,R3,#-1		;R4 adds to itself for (R3-1) times
 	AND R0,R0,#0
 LOOP_MUL
 	ADD R0,R0,R4
 	ADD R1,R1,#-1
 	BRp LOOP_MUL
-	RET
+	JMP PUSH_RESULT
 	
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;input R3, R4
 ;out R0
 DIV	
 ;your code goes here
+	ST R7,Save_R7
+	JSR POP_TWO
+	LD R7,Save_R7
 	AND R0,R0,#0
 	ADD R1,R3,#0
 	ST R7,Save_R7
@@ -186,7 +206,7 @@ LOOP_DIV
 	ADD R0,R0,#1
 	BRnzp LOOP_DIV
 END_DIV
-	RET
+	JMP PUSH_RESULT
 	
 	
 	
@@ -196,6 +216,9 @@ END_DIV
 ;out R0
 EXP
 ;your code goes here
+	ST R7,Save_R7
+	JSR POP_TWO
+	LD R7,Save_R7
 	ADD R1,R3,#-1		;R4 times itself for (R3-1) times
 	AND R0,R0,#0
 	ADD R3,R4,#0
@@ -206,9 +229,17 @@ LOOP_EXP
 	ADD R4,R0,#0
 	ADD R1,R1,#-1
 	BRp LOOP_EXP
-	RET
-
+	JMP PUSH_RESULT
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+PUSH_RESULT ;in R0
+	ST R7,Save_R7
+	JSR PUSH				;push the number to the stack
+	LD R7,Save_R7
+	ADD R5,R5,#0
+	BRp EXCEPT
+	JMP LOOP
 	
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;	
 ;IN:R0, OUT:R5 (0-success, 1-fail/overflow)
 ;R3: STACK_END R4: STACK_TOP
 ;
