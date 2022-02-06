@@ -26,14 +26,24 @@
 ;R3 is for the number at the top of the stack and STACK_START
 ;R4 is for the number at the second place of the stack and STACK_TOP
 ;R5 is for holding the final result and the exception for POP and PUSH
-;R6 not used 
+;R6 used when R4 in MUL or DIV is negitive
 ;R7 is for PC when JSR and RET in subroutines
+;The Hex_print is a blackbox where it prints what ever is in R5
 ;partners:jinj2(me)
 .ORIG x3000
-	
-
+ZERO .FILL x30
+Save_R7     .BLKW #1
+NINE .FILL x39
+ADDI .FILL x2B
+MINUS .FILL x2D
+TIME .FILL x2A
+DIVS .FILL x2F
+POWS .FILL x5E
+SPACE .FILL x20
+EQUAL .FILL x3D
 ;your code goes here
 LOOP
+	AND R7,R7,#0
 	GETC
 	OUT
 
@@ -202,11 +212,7 @@ EXCEPT
 	LEA R0,EXCEPTION_MESSAGE
 	PUTS
 	HALT
-	
-
 ;your code goes here
-
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;input R3, R4
 ;out R0
@@ -237,16 +243,46 @@ MIN
 MUL	
 ;your code goes here
 	ST R7,Save_R7
-	JSR POP_TWO
+	JSR POP_TWO			;pop two numbers
 	LD R7,Save_R7
+	ST R7,Save_R7
+	JSR NEG_TEST		;test whether R3,R4 is negitive
+	LD R7,Save_R7
+	ADD R6,R6,#0
+	BRzp MUL_R4_NEG
+	ADD R1,R3,#0
+	ST R7,Save_R7
+	JSR NEG				
+	LD R7,Save_R7
+	ADD R3,R1,#0
+MUL_R4_NEG
+	ADD R2,R2,#0
+	BRzp MUL_MID
+	ADD R1,R4,#0
+	ST R7,Save_R7
+	JSR NEG				
+	LD R7,Save_R7
+	ADD R4,R1,#0
+MUL_MID
 	ADD R1,R3,#0		;R4 adds to itself for R3 times
 	AND R0,R0,#0
 LOOP_MUL
 	ADD R0,R0,R4
 	ADD R1,R1,#-1
 	BRp LOOP_MUL
+
+	ADD R1,R6,#0
+	ST R7,Save_R7
+	JSR NEG				
+	LD R7,Save_R7
+	ADD R1,R2,R1
+	BRz PUSH_RESULT
+	ADD R1,R0,#0
+	ST R7,Save_R7
+	JSR NEG				
+	LD R7,Save_R7
+	ADD R0,R1,#0
 	BRnzp PUSH_RESULT
-	
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;input R3, R4
 ;out R0
@@ -255,6 +291,25 @@ DIV
 	ST R7,Save_R7
 	JSR POP_TWO			;pop two numbers, R4/R3
 	LD R7,Save_R7
+	ST R7,Save_R7
+	JSR NEG_TEST		;test whether R3,R4 is negitive
+	LD R7,Save_R7
+	ADD R6,R6,#0
+	BRzp DIV_R4_NEG
+	ADD R1,R3,#0
+	ST R7,Save_R7
+	JSR NEG				
+	LD R7,Save_R7
+	ADD R3,R1,#0
+DIV_R4_NEG
+	ADD R2,R2,#0
+	BRzp DIV_MID
+	ADD R1,R4,#0
+	ST R7,Save_R7
+	JSR NEG				
+	LD R7,Save_R7
+	ADD R4,R1,#0
+DIV_MID
 	AND R0,R0,#0		
 	ADD R1,R3,#0		;set R0 to R3
 	ST R7,Save_R7
@@ -266,11 +321,18 @@ LOOP_DIV
 	ADD R0,R0,#1
 	BRnzp LOOP_DIV
 END_DIV
+	ADD R1,R6,#0
+	ST R7,Save_R7
+	JSR NEG				
+	LD R7,Save_R7
+	ADD R1,R2,R1
+	BRz PUSH_RESULT
+	ADD R1,R0,#0
+	ST R7,Save_R7
+	JSR NEG				
+	LD R7,Save_R7
+	ADD R0,R1,#0
 	BRnzp PUSH_RESULT
-	
-	
-	
-	
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;input R3, R4
 ;out R0
@@ -279,6 +341,8 @@ EXP
 	ST R7,Save_R7
 	JSR POP_TWO			;pop two numbers from the stack to R3 and R4
 	LD R7,Save_R7
+	ADD R3,R3,#0
+	BRz EXP_ZERO
 	ADD R1,R3,#-1		;R4 times itself for (R3-1) times
 	AND R0,R0,#0
 	ADD R3,R4,#0
@@ -291,6 +355,10 @@ LOOP_EXP_IN
 	BRp LOOP_EXP_IN
 	ADD R1,R1,#-1
 	BRp LOOP_EXP
+	BRnzp PUSH_RESULT
+EXP_ZERO
+	AND R0,R0,#0
+	ADD R0,R0,#1
 	BRnzp PUSH_RESULT
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 PUSH_RESULT ;in R0
@@ -361,18 +429,25 @@ NEG
 	NOT R1,R1
 	ADD R1,R1,#1
 	RET
-	
 
-ZERO .FILL x30
-NINE .FILL x39
-ADDI .FILL x2B
-MINUS .FILL x2D
-TIME .FILL x2A
-DIVS .FILL x2F
-POWS .FILL x5E
-SPACE .FILL x20
-EQUAL .FILL x3D
-Save_R7     .BLKW #1
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;input R3,R4, outputR2(R4),R6(R3) (1 when NEG, 0 when pos or zero)
+NEG_TEST
+	AND R6,R6,#0
+	AND R2,R2,#0
+	ADD R3,R3,#0
+	BRzp NEG_TEST_R4
+	NOT R6,R6
+NEG_TEST_R4
+	ADD R4,R4,#0
+	BRzp NEG_TEST_END
+	NOT R2,R2
+NEG_TEST_END
+	RET
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
 Save_R5     .BLKW #1
 POP_SaveR3	.BLKW #1	;
 POP_SaveR4	.BLKW #1	;
@@ -380,6 +455,4 @@ STACK_END	.FILL x3FF0	;
 STACK_START	.FILL x4000	;
 STACK_TOP	.FILL x4000	;
 EXCEPTION_MESSAGE .STRINGZ "'Invalid Expression'"
-
-
 .END
