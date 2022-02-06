@@ -44,85 +44,85 @@ EQUAL .FILL x3D
 ;your code goes here
 LOOP
 	AND R7,R7,#0
-	GETC
-	OUT
+	GETC			;get and print the character that is 
+	OUT				;pressed by the keyboard
 
 CHECK_NUMBER
 	LD R1,ZERO ; load 0 into R1
 	ST R7,Save_R7
-	JSR NEG   ;  set R1 to its negitive
-	LD R7,Save_R7
-	ADD R1,R1,R0
+	JSR NEG   			;Checks if the ASCII code for the input is smaller
+	LD R7,Save_R7		;than the smallest number (x30), if true, check if
+	ADD R1,R1,R0		;it is a operator 
 	BRn CHECK_OP
-	LD R1,NINE   ; load 9 into R1
-	ST R7,Save_R7
-	JSR NEG   ;  set R1 to its negitive
-	LD R7,Save_R7
+	LD R1,NINE   
+	ST R7,Save_R7		;hecks if the ASCII code for the input is bigger
+	JSR NEG   			;than the biggest number (x39), if true, check if
+	LD R7,Save_R7		;it is a operator, else push it to the stack
 	ADD R1,R1,R0
 	BRp CHECK_OP
 	LD R1,ZERO
-	ST R7,Save_R7
-	JSR NEG
+	ST R7,Save_R7		;minus the number by x30 so that it is a number in
+	JSR NEG				;binary and not in Hex
 	LD R7,Save_R7
 	ADD R0,R1,R0
 	ST R7,Save_R7
 	JSR PUSH
 	LD R7,Save_R7
-	ADD R5,R5,#0
+	ADD R5,R5,#0		;branch to EXCEPT if something went wrong in PUSH
 	BRp EXCEPT
-	BRnzp LOOP
+	BRnzp LOOP			;After push, go back to LOOP and wait for input
 
 CHECK_OP
 ;Check if it is "+"
-	LD R1,ADDI   ; load the ASCII of "+" into R1
-	ST R7,Save_R7
-	JSR NEG   ;  set R1 to its negitive
-	LD R7,Save_R7
+	LD R1,ADDI   		;First take the negitive of the "+" ASCII
+	ST R7,Save_R7		;if the negitive plus the input is zero then
+	JSR NEG   			;it means that the input is "+" and will go to
+	LD R7,Save_R7		;that subroutine
 	ADD R1,R1,R0
 	BRz PLUS
 ;Check if it is "-"
-	LD R1,MINUS    ; load the ASCII of "-" into R1
-	ST R7,Save_R7
-	JSR NEG   ;  set R1 to its negitive
-	LD R7,Save_R7
+	LD R1,MINUS    		;First take the negitive of the "-" ASCII
+	ST R7,Save_R7		;if the negitive plus the input is zero then
+	JSR NEG   			;it means that the input is "-" and will go to
+	LD R7,Save_R7		;that subroutine
 	ADD R1,R1,R0
 	BRz MIN
 ;Check if it is "*"
-	LD R1,TIME    ; load the ASCII of "*" into R1
-	ST R7,Save_R7
-	JSR NEG   ;  set R1 to its negitive
-	LD R7,Save_R7
+	LD R1,TIME    		;First take the negitive of the "*" ASCII
+	ST R7,Save_R7		;if the negitive plus the input is zero then
+	JSR NEG   			;it means that the input is "*" and will go to
+	LD R7,Save_R7		;that subroutine
 	ADD R1,R1,R0
 	BRz MUL
 ;Check if it is "/"
-	LD R1,DIVS    ; load the ASCII of "/" into R1
-	ST R7,Save_R7
-	JSR NEG   ;  set R1 to its negitive
-	LD R7,Save_R7
+	LD R1,DIVS    		;First take the negitive of the "/" ASCII
+	ST R7,Save_R7		;if the negitive plus the input is zero then
+	JSR NEG   			;it means that the input is "/" and will go to
+	LD R7,Save_R7		;that subroutine
 	ADD R1,R1,R0
 	BRz DIV
 ;Check if it is "^"
-	LD R1,POWS     ; load the ASCII of "^" into R1
-	ST R7,Save_R7
-	JSR NEG   ;  set R1 to its negitive
-	LD R7,Save_R7
-	ADD R1,R1,R0
+	LD R1,POWS     
+	ST R7,Save_R7		;First take the negitive of the "^" ASCII
+	JSR NEG   			;if the negitive plus the input is zero then
+	LD R7,Save_R7		;it means that the input is "^" and will go to
+	ADD R1,R1,R0		;that subroutine
 	BRz EXP
 ;Check if it is "space"
-	LD R1,SPACE     ; load the ASCII of "space" into R1
-	ST R7,Save_R7
-	JSR NEG   ;  set R1 to its negitive
-	LD R7,Save_R7
+	LD R1,SPACE     	;First take the negitive of the " " ASCII
+	ST R7,Save_R7		;if the negitive plus the input is zero then
+	JSR NEG   			;it means that the input is " " and will go to
+	LD R7,Save_R7		;that subroutine
 	ADD R1,R1,R0
 	BRz SPACE_OP
 ;Check if it is "="
-	LD R1,EQUAL     ; load the ASCII of "=" into R1
-	ST R7,Save_R7
-	JSR NEG   ;  set R1 to its negitive
-	LD R7,Save_R7
+	LD R1,EQUAL     	;First take the negitive of the "=" ASCII
+	ST R7,Save_R7		;if the negitive plus the input is zero then
+	JSR NEG   			;it means that the input is "=" and will go to
+	LD R7,Save_R7		;that subroutine
 	ADD R1,R1,R0
-	BRz EQUAL_OP
-	BRnzp EXCEPT
+	BRz EQUAL_OP		;it is not any of those, so it must be a invalid
+	BRnzp EXCEPT		;input
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 SPACE_OP
@@ -134,13 +134,13 @@ EQUAL_OP
 	LD R4, STACK_TOP	;
 	ADD R1,R4,#1
 	ST R7,Save_R7
-	JSR NEG   ;  set R1 to its negitive
-	LD R7,Save_R7
+	JSR NEG   			;Check if there is only one number left
+	LD R7,Save_R7		;in the stack. If not, branch to EXCEPT
 	ADD R1,R1,R3
 	BRnp EXCEPT
 	ST R7,Save_R7
-	JSR POP   ;  POP the last number in the stack
-	LD R7,Save_R7
+	JSR POP   			;POP the number to R5,while double checking 
+	LD R7,Save_R7		;that there are no errors occuring 
 	ADD R5,R5,#0
 	BRp EXCEPT
 	ADD R5,R0,#0
@@ -151,9 +151,9 @@ EQUAL_OP
 POP_TWO
 	ST R7,Save_R7
 	JSR POP
-	LD R7,Save_R7
-	ADD R5,R5,#0
-	BRp EXCEPT
+	LD R7,Save_R7			;POPs two numbers from the 
+	ADD R5,R5,#0			;stack,the first number goes 
+	BRp EXCEPT				;in R3 and the second R4
 	ADD R3,R0,#0
 	ST R7,Save_R7
 	JSR POP
@@ -165,12 +165,12 @@ POP_TWO
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;R5- value to print in hexadecimal
 PRINT_HEX
-	ST R5,Save_R5
-	AND R1,R1,#0
-	ADD R1,R1,#4
-OUTER_LOOP
-	AND R0,R0,#0
-	AND R2,R2,#0
+	ST R5,Save_R5		;This contains two loops, an outer
+	AND R1,R1,#0		;one and an inner one. The inner one
+	ADD R1,R1,#4		;moves the 4 leftmost bit on R5 onto R0,which
+OUTER_LOOP				;will later be printed. The outer loop
+	AND R0,R0,#0		;shifts to the left by 4 bit so it can be
+	AND R2,R2,#0		;moved to R0
 	ADD R2,R2,#4
 ;;;;;
 INNER_LOOP
@@ -209,14 +209,14 @@ PRINT_STUFF_FIN
 ;
 ;
 EXCEPT
-	LEA R0,EXCEPTION_MESSAGE
-	PUTS
+	LEA R0,EXCEPTION_MESSAGE		;print the message if 
+	PUTS							;an exception occurs
 	HALT
 ;your code goes here
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;input R3, R4
 ;out R0
-PLUS					;adds the value in R3 and R4
+PLUS					;pop and adds the value in R3 and R4
 ;your code goes here
 	ST R7,Save_R7
 	JSR POP_TWO
@@ -247,7 +247,7 @@ MUL
 	LD R7,Save_R7
 	ST R7,Save_R7
 	JSR NEG_TEST		;test whether R3,R4 is negitive
-	LD R7,Save_R7
+	LD R7,Save_R7		;saving the result in R2,R6
 	ADD R6,R6,#0
 	BRzp MUL_R4_NEG
 	ADD R1,R3,#0
@@ -276,8 +276,8 @@ LOOP_MUL
 	JSR NEG				
 	LD R7,Save_R7
 	ADD R1,R2,R1
-	BRz PUSH_RESULT
-	ADD R1,R0,#0
+	BRz PUSH_RESULT		;call the sign in R2,R6
+	ADD R1,R0,#0		;so that the output will be correct
 	ST R7,Save_R7
 	JSR NEG				
 	LD R7,Save_R7
@@ -293,7 +293,7 @@ DIV
 	LD R7,Save_R7
 	ST R7,Save_R7
 	JSR NEG_TEST		;test whether R3,R4 is negitive
-	LD R7,Save_R7
+	LD R7,Save_R7		;and store them in R2,R6
 	ADD R6,R6,#0
 	BRzp DIV_R4_NEG
 	ADD R1,R3,#0
@@ -325,8 +325,8 @@ END_DIV
 	ST R7,Save_R7
 	JSR NEG				
 	LD R7,Save_R7
-	ADD R1,R2,R1
-	BRz PUSH_RESULT
+	ADD R1,R2,R1		;call the sign in R2,R6
+	BRz PUSH_RESULT		;so that the output will be correct
 	ADD R1,R0,#0
 	ST R7,Save_R7
 	JSR NEG				
@@ -350,14 +350,14 @@ LOOP_EXP
 	AND R2,R2,#0
 	ADD R2,R2,R3
 LOOP_EXP_IN
-	ADD R0,R0,R4
-	ADD R2,R2,#-1
+	ADD R0,R0,R4		;this is a altered version of the MUL
+	ADD R2,R2,#-1		;subroutine
 	BRp LOOP_EXP_IN
 	ADD R1,R1,#-1
 	BRp LOOP_EXP
 	BRnzp PUSH_RESULT
 EXP_ZERO
-	AND R0,R0,#0
+	AND R0,R0,#0		;the output will be 1 if x^0 occurs
 	ADD R0,R0,#1
 	BRnzp PUSH_RESULT
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -454,5 +454,5 @@ POP_SaveR4	.BLKW #1	;
 STACK_END	.FILL x3FF0	;
 STACK_START	.FILL x4000	;
 STACK_TOP	.FILL x4000	;
-EXCEPTION_MESSAGE .STRINGZ "'Invalid Expression'"
+EXCEPTION_MESSAGE .STRINGZ "Invalid Expression"
 .END
