@@ -1,3 +1,4 @@
+;partners:jinj2(me)
 ;Introduction
 ;This program does a "reverse polish notation" 
 ;1.The user types in numbers from 0-9, +-*/^,or "space" and =
@@ -29,7 +30,6 @@
 ;R6 used when R4 in MUL or DIV is negitive
 ;R7 is for PC when JSR and RET in subroutines
 ;The Hex_print is a blackbox where it prints what ever is in R5
-;partners:jinj2(me)
 .ORIG x3000
 ZERO .FILL x30
 Save_R7     .BLKW #1
