@@ -75,23 +75,23 @@ CHECK_NUMBER
 CHECK_OP
 ;Check if it is "+"
 	LD R1,ADDI   		;First take the negitive of the "+" ASCII
-	ST R7,Save_R7		;if the negitive plus the input is zero then
+						;if the negitive plus the input is zero then
 	JSR NEG   			;it means that the input is "+" and will go to
-	LD R7,Save_R7		;that subroutine
+						;that subroutine
 	ADD R1,R1,R0
 	BRz PLUS
 ;Check if it is "-"
 	LD R1,MINUS    		;First take the negitive of the "-" ASCII
-	ST R7,Save_R7		;if the negitive plus the input is zero then
+						;if the negitive plus the input is zero then
 	JSR NEG   			;it means that the input is "-" and will go to
-	LD R7,Save_R7		;that subroutine
+						;that subroutine
 	ADD R1,R1,R0
 	BRz MIN
 ;Check if it is "*"
 	LD R1,TIME    		;First take the negitive of the "*" ASCII
-	ST R7,Save_R7		;if the negitive plus the input is zero then
+						;if the negitive plus the input is zero then
 	JSR NEG   			;it means that the input is "*" and will go to
-	LD R7,Save_R7		;that subroutine
+						;that subroutine
 	ADD R1,R1,R0
 	BRz MUL
 ;Check if it is "/"
@@ -341,24 +341,30 @@ EXP
 	ST R7,Save_R7
 	JSR POP_TWO			;pop two numbers from the stack to R3 and R4
 	LD R7,Save_R7
-	ADD R3,R3,#0
-	BRz EXP_ZERO
-	ADD R1,R3,#-1		;R4 times itself for (R3-1) times
-	AND R0,R0,#0
+	ADD R3,R3,#-1
+	BRz EXP_ONE
+	ADD R1,R3,#0		;R4 times itself for (R3-1) times
+	AND R6,R6,#0
 	ADD R3,R4,#0
 LOOP_EXP
 	AND R2,R2,#0
 	ADD R2,R2,R3
-LOOP_EXP_IN
-	ADD R0,R0,R4		;this is a altered version of the MUL
+LOOP_EXP_MUL
+	ADD R6,R6,R4		;this is a altered version of the MUL
 	ADD R2,R2,#-1		;subroutine
-	BRp LOOP_EXP_IN
+	BRp LOOP_EXP_MUL
+	AND R4,R4,#0
+	ADD R4,R6,#0
 	ADD R1,R1,#-1
-	BRp LOOP_EXP
+	BRz LOOP_END
+	AND R6,R6,#0
+	BRnzp LOOP_EXP
+LOOP_END
+	ADD R0,R6,#0
 	BRnzp PUSH_RESULT
-EXP_ZERO
-	AND R0,R0,#0		;the output will be 1 if x^0 occurs
-	ADD R0,R0,#1
+EXP_ONE
+	AND R0,R0,#0		;the output will be x if x^1 occurs
+	ADD R0,R0,R4
 	BRnzp PUSH_RESULT
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 PUSH_RESULT ;in R0
