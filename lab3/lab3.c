@@ -14,7 +14,7 @@
 int main()
 {
     // Declare variables
-
+  int x;
     // Prompt user for input
 
     // Get user input
