@@ -1,8 +1,12 @@
 /* partner: jinj2(me)
  *bug1: a missing ";" in the main.c, line 26
- *bug2: at line 41, it should be <= instead of <
+ *bug2: at line 44(the second for), it should be < instead of <=
  *bug3: ret should be 1 if there is a semiprime
- *bug4: at line23, it should be < instead of <=
+ *bug4: at line28, is_prime should return 0 iff
+ *      the remainder is zero and the number does not equal i
+ *bug5:at print_semiprime,the function should exit the
+ *     check semiprime loop with a break
+ *bug6:at line50, it should be k = i/j
  */
 
 
@@ -21,11 +25,11 @@ int is_prime(int number)
     int i;
     if (number == 1) {return 0;}
     for (i = 2; i <= number; i++) { //for each number smaller than it
-        if (number % i == 0) { //check if the remainder is 0
-            return 1;
+        if (number % i == 0 && number!=i) { //check if the remainder is 0
+            return 0;
         }
     }
-    return 0;
+    return 1;
 }
 
 
@@ -40,13 +44,14 @@ int print_semiprimes(int a, int b)
     int ret = 0;
     for (i = a; i <=b; i++) { //for each item in interval
         //check if semiprime
-        for (j = 2; j <= i; j++) {
+        for (j = 2; j < i; j++) {
             if (i%j == 0) {
                 if (is_prime(j)) {
-                    k = i%j;
+                    k = i/j;
                     if (is_prime(k)) {
                         printf("%d ", i);
 			ret = 1;
+			break;
                     }
                 }
             }
