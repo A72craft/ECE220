@@ -1,12 +1,19 @@
 /* partner: jinj2(me)
  *bug1: a missing ";" in the main.c, line 26
+ *    :the code will not compile when it's missing
  *bug2: at line 44(the second for), it should be < instead of <=
+ *    :the code will check the number itself, which is not what we want
  *bug3: ret should be 1 if there is a semiprime
+ *    :if missing, the code will not return the correct value
  *bug4: at line28, is_prime should return 0 iff
  *      the remainder is zero and the number does not equal i
+ *    :the code will have trouble checking primes if not corrected
  *bug5:at print_semiprime,the function should exit the
  *     check semiprime loop with a break
+ *    :when the number is a confirmed semiprime, the code should break
+ *     and start to check the next number in the range
  *bug6:at line50, it should be k = i/j
+ *    :the k will always equal to 0 if k=i%j, which is not something we want
  */
 
 
