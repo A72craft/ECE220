@@ -48,22 +48,19 @@ static int solution4;
 int
 set_seed (const char seed_str[])
 {
-//    Example of how to use sscanf to read a single integer and check for anything other than the integer
-//    "int seed" will contain the number typed by the user (if any) and the string "post" will contain anything after the integer
-//    The user should enter only an integer, and nothing else, so we will check that only "seed" is read. 
-//    We declare
-//    int seed;
-//    char post[2];
-//    The sscanf statement below reads the integer into seed. 
-//    sscanf (seed_str, "%d%1s", &seed, post)
-//    If there is no integer, seed will not be set. If something else is read after the integer, it will go into "post".
-//    The return value of sscanf indicates the number of items read succesfully.
-//    When the user has typed in only an integer, only 1 item should be read sucessfully. 
-//    Check that the return value is 1 to ensure the user enters only an integer. 
-//    Feel free to uncomment these statements, modify them, or delete these comments as necessary. 
-//    You may need to change the return statement below
+  int seed; //the int treated as seed
+  int return_value;  //return value of sscanf
+  int ret;  //the final return value of the function
+  char post[2];  //stuff
+  return_value = sscanf (seed_str, "%d%1s", &seed, post); //scan the string input
+ if(return_value==1){
+   srand(seed);  //since only the int was read,set the seed and ret 1
+   ret = 1;}
+ else{
+   ret = 0;  //something else is read. Ret 0 and print the error message
+   printf("set_seed: invalid seed\n");}
    
-    return 0;
+    return ret;
 }
 
 
