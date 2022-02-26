@@ -31,6 +31,53 @@ static int solution3;
 static int solution4;
 
 
+/*this function check whether the 4 inputs are between 1 and 8.
+If not, return 0*/
+int one_to_eight(const int w,int x,int y,int z){
+	if( w<1 || w>8){
+		return 0;}
+	if( x<1 || x>8){
+		return 0;}
+	if( y<1 || y>8){
+		return 0;}
+	if( z<1 || z>8){
+		return 0;}
+	return 1;}
+
+/*this function "perfect guess" takes 4 arrays(solution,guess, and their pairing status)
+and compares the solution to the guess. If is the same, both the pairing 
+status are 1 and perfect is increased by one*/
+int perfect_guess(int sol[4],int guess[4],int sol_pair[4],int guess_pair[4]){
+	int i;
+	int perfect=0;
+	for (i = 0;i<4;i++){
+		if (sol[i] == guess[i]){
+			sol_pair[i] = 1;
+			guess_pair[i] = 1;
+			perfect = perfect + 1;}
+			}
+	return perfect;}
+
+/*this function "misplace_guess" takes 4 arrays(solution,guess, and their pairing status)
+and compares the guess to all the solution. Both the status of them needs to be
+available. It will compare all available guess to all available solutions,
+setting the status to 1 if is the same and add 1 to misplaced*/
+int misplace_guess(int sol[4],int guess[4],int sol_pair[4],int guess_pair[4]){
+	int i ; //i for guess
+	int j ; //j for solution
+	int misplace = 0;
+	for (i = 0;i<4;i++){
+		if (guess_pair[i] ==0){
+			for (j=0;j<4;j++){
+				if (guess[i]==sol[j] && sol_pair[j] == 0){
+					guess_pair[i] = 1;
+					sol_pair[j] = 1;
+					misplace = misplace + 1;
+					break;}
+				}
+		}
+	}
+	return misplace;}
 /*
  * set_seed -- This function sets the seed value for pseudorandom
  * number generation based on the number the user types.
@@ -83,7 +130,16 @@ void
 start_game (int* one, int* two, int* three, int* four)
 {
     //your code here
-    
+  *one = (rand()%8)+1;
+  solution1 = *one;
+    *two = (rand()%8)+1;
+    solution2 = *two;
+    *three = (rand()%8)+1;
+    solution3 = *three;
+    *four = (rand()%8)+1;
+  solution4 = *four;
+    guess_number = 1;
+
 }
 
 /*
@@ -113,17 +169,34 @@ int
 make_guess (const char guess_str[], int* one, int* two, 
 	    int* three, int* four)
 {
-//  One thing you will need to read four integers from the string guess_str, using a process
-//  similar to set_seed
-//  The statement, given char post[2]; and four integers w,x,y,z,
-//  sscanf (guess_str, "%d%d%d%d%1s", &w, &x, &y, &z, post)
-//  will read four integers from guess_str into the integers and read anything else present into post
-//  The return value of sscanf indicates the number of items sucessfully read from the string.
-//  You should check that exactly four integers were sucessfully read.
-//  You should then check if the 4 integers are between 1-8. If so, it is a valid guess
-//  Otherwise, it is invalid.  
-//  Feel free to use this sscanf statement, delete these comments, and modify the return statement as needed
+	int guess_pair[4]={0};
+	int sol_pair[4]={0};
+	int guess[4]; int sol[4];
+	int perfect=0;int misplace = 0;
+	int w,x,y,z,ret_scanf,ret18;
+	char post[2];
+	ret_scanf = sscanf (guess_str, "%d%d%d%d%1s", &w, &x, &y, &z, post);
+	if (ret_scanf!=4 || post == True){
+		printf("make_guess: invalid guess\n");  //check if the input is valid
+		return 0;}
+	ret18 = one_to_eight(w,x,y,z);
+	if (ret18 == 0){                           //check if the number is between 1 and 8
+		printf("make_guess: invalid guess\n");
+		return 0;}
+	guess[0] = w;
+	guess[1] = x;
+	guess[2] = y;
+	guess[3] = z;
+	sol[0] = solution1;
+	sol[1] = solution2;
+	sol[2] = solution3;
+	sol[3] = solution4;
+	perfect = perfect_guess(sol,guess,sol_pair,guess_pair);
+	misplace = misplace_guess(sol,guess,sol_pair,guess_pair);
+	printf("With guess %d, you got %d perfect matches and %d misplaced matches.\n",guess_number, perfect,misplace);
+	guess_number = guess_number + 1;
     return 1;
 }
 
+	
 
