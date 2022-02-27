@@ -1,28 +1,21 @@
-/*			
- *
- * prog5.c - source file adapted from UIUC ECE198KL Spring 2013 Program 4
- *           student code -- GOLD VERSION by Steven S. Lumetta
- */
-
-
 /*
- * The functions that you must write are defined in the header file.
- * Blank function prototypes with explanatory headers are provided
- * in this file to help you get started.
- */
-
-
-
+partner: jinj2(me)
+Besides the three function provided in the OG code, I also
+wrote 3 extra functions.
+1.one_to_eight:this function check whether the 4 inputs are 
+  between 1 to 8.
+2.perfect_guess:this function takes in 4 array(sol,guess,sol_pair,
+  guess_pair). When the solution is equal to the guess, both is marked 
+  as paired and the number of perfect_guess is returned.
+3.misplace_guess:this function takees in 4 array(sol,guess,sol_pair,
+  guess_pair). It will first check if the guess is paired.If not, it will
+  be compared to all the not-paired solutions, and both will be marked paired 
+  if they are equal. The number of misplaced guesses are returned.
+*/
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "prog5.h"
-
-
-/*
- * You will need to keep track of the solution code using file scope
- * variables as well as the guess number.
- */
 
 static int guess_number;
 static int solution1;
@@ -50,11 +43,11 @@ status are 1 and perfect is increased by one*/
 int perfect_guess(int sol[4],int guess[4],int sol_pair[4],int guess_pair[4]){
 	int i;
 	int perfect=0;
-	for (i = 0;i<4;i++){
+	for (i = 0;i<4;i++){   //check all 4 numbers
 		if (sol[i] == guess[i]){
-			sol_pair[i] = 1;
-			guess_pair[i] = 1;
-			perfect = perfect + 1;}
+			sol_pair[i] = 1;    //if paired, set the pairing status
+			guess_pair[i] = 1;  //for both to be 1
+			perfect = perfect + 1;}  //increment by one 
 			}
 	return perfect;}
 
@@ -66,13 +59,13 @@ int misplace_guess(int sol[4],int guess[4],int sol_pair[4],int guess_pair[4]){
 	int i ; //i for guess
 	int j ; //j for solution
 	int misplace = 0;
-	for (i = 0;i<4;i++){
-		if (guess_pair[i] ==0){
-			for (j=0;j<4;j++){
-				if (guess[i]==sol[j] && sol_pair[j] == 0){
-					guess_pair[i] = 1;
+	for (i = 0;i<4;i++){   //for all guesses
+		if (guess_pair[i] ==0){  //if not marked as paired 
+			for (j=0;j<4;j++){  //then for all solution
+				if (guess[i]==sol[j] && sol_pair[j] == 0){  //check if are the same AND solution is not paired
+					guess_pair[i] = 1;  //then mark as paired
 					sol_pair[j] = 1;
-					misplace = misplace + 1;
+					misplace = misplace + 1;   //increment by one 
 					break;}
 				}
 		}
@@ -129,8 +122,7 @@ set_seed (const char seed_str[])
 void
 start_game (int* one, int* two, int* three, int* four)
 {
-    //your code here
-  *one = (rand()%8)+1;
+  *one = (rand()%8)+1;  //set the number for all four solutions
   solution1 = *one;
     *two = (rand()%8)+1;
     solution2 = *two;
@@ -169,7 +161,7 @@ int
 make_guess (const char guess_str[], int* one, int* two, 
 	    int* three, int* four)
 {
-	int guess_pair[4]={0};
+	int guess_pair[4]={0};   //initalize all the variables
 	int sol_pair[4]={0};
 	int guess[4]; int sol[4];
 	int perfect=0;int misplace = 0;
@@ -183,18 +175,18 @@ make_guess (const char guess_str[], int* one, int* two,
 	if (ret18 == 0){                           //check if the number is between 1 and 8
 		printf("make_guess: invalid guess\n");
 		return 0;}
-	guess[0] = w;*one = w;
+	guess[0] = w;*one = w;   //put the guessed number in pointers and arrays
 	guess[1] = x;*two = x;
 	guess[2] = y;*three = y;
 	guess[3] = z;*four = z;
-	sol[0] = solution1;
+	sol[0] = solution1;      //put the solutions in the solution array
 	sol[1] = solution2;
 	sol[2] = solution3;
 	sol[3] = solution4;
-	perfect = perfect_guess(sol,guess,sol_pair,guess_pair);
-	misplace = misplace_guess(sol,guess,sol_pair,guess_pair);
+	perfect = perfect_guess(sol,guess,sol_pair,guess_pair); //call perfect_guess 
+	misplace = misplace_guess(sol,guess,sol_pair,guess_pair);  //call misplace__guess
 	printf("With guess %d, you got %d perfect matches and %d misplaced matches.\n",guess_number, perfect,misplace);
-	guess_number = guess_number + 1;
+	guess_number = guess_number + 1; //increment by one
     return 1;
 }
 
