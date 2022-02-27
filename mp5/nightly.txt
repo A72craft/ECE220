@@ -1,0 +1,17 @@
+Compilation Results:
+********************
+prog5.c: In function ‘make_guess’:
+prog5.c:179:30: error: ‘True’ undeclared (first use in this function)
+  if (ret_scanf!=4 || post == True){
+                              ^
+prog5.c:179:30: note: each undeclared identifier is reported only once for each function it appears in
+prog5.c: In function ‘make_guess’:
+prog5.c:179:30: error: ‘True’ undeclared (first use in this function)
+  if (ret_scanf!=4 || post == True){
+                              ^
+prog5.c:179:30: note: each undeclared identifier is reported only once for each function it appears in
+This nightly test is focusing on compilation error not functionality test.
+This nightly report only tests on the released testcases.
+There are many hidden edge testcase for the MP. Please test it yourselve.
+HIGHLY RECOMMEND YOU TO START YOUR MP EARLY!!!!!!!
+Timestamp: 2022-02-27_00:30:17
