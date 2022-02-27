@@ -176,17 +176,17 @@ make_guess (const char guess_str[], int* one, int* two,
 	int w,x,y,z,ret_scanf,ret18;
 	char post[2];
 	ret_scanf = sscanf (guess_str, "%d%d%d%d%1s", &w, &x, &y, &z, post);
-	if (ret_scanf!=4 || post == True){
+	if (ret_scanf != 4 ){
 		printf("make_guess: invalid guess\n");  //check if the input is valid
 		return 0;}
 	ret18 = one_to_eight(w,x,y,z);
 	if (ret18 == 0){                           //check if the number is between 1 and 8
 		printf("make_guess: invalid guess\n");
 		return 0;}
-	guess[0] = w;
-	guess[1] = x;
-	guess[2] = y;
-	guess[3] = z;
+	guess[0] = w;*one = w;
+	guess[1] = x;*two = x;
+	guess[2] = y;*three = y;
+	guess[3] = z;*four = z;
 	sol[0] = solution1;
 	sol[1] = solution2;
 	sol[2] = solution3;
