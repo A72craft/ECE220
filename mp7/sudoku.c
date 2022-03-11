@@ -1,4 +1,12 @@
+/*
+
+*/
 #include "sudoku.h"
+int is_val_in_row(const int val, const int i, const int sudoku[9][9]);
+int is_val_in_col(const int val, const int j, const int sudoku[9][9]);
+int is_val_in_3x3_zone(const int val, const int i, const int j, const int sudoku[9][9]);
+int is_val_valid(const int val, const int i, const int j, const int sudoku[9][9]);
+int cells_full(const int sudoku[9][9]);
 
 //-------------------------------------------------------------------------------------------------
 // Start here to work on your MP7
@@ -11,11 +19,10 @@
 int is_val_in_row(const int val, const int i, const int sudoku[9][9]) {
 
   assert(i>=0 && i<9);
-
-  // BEG TODO
-  
+	for (int j = 0;j<9;j++){
+		if (sudoku[i][j]==val)
+			return 1;} 
   return 0;
-  // END TODO
 }
 
 // Function: is_val_in_col
@@ -23,11 +30,11 @@ int is_val_in_row(const int val, const int i, const int sudoku[9][9]) {
 int is_val_in_col(const int val, const int j, const int sudoku[9][9]) {
 
   assert(j>=0 && j<9);
-
-  // BEG TODO
-  
+	for (int i = 0;i<9;i++){
+		if (sudoku[i][j]==val)
+			return 1;} 
   return 0;
-  // END TODO
+
 }
 
 // Function: is_val_in_3x3_zone
@@ -35,11 +42,17 @@ int is_val_in_col(const int val, const int j, const int sudoku[9][9]) {
 int is_val_in_3x3_zone(const int val, const int i, const int j, const int sudoku[9][9]) {
    
   assert(i>=0 && i<9);
-  
-  // BEG TODO
-  
+	int col,row;
+	col = j/3; //col have 3 cases, 0,1,2, which corresponds to the 3 columns of the 3X3
+	row = i/3; //row have 3 cases, 0,1,2, which corresponds to the 3 rows of 3X3
+  	int new_row = row*3;
+	int new_col = col*3;
+	for (int r = new_row;r<new_row+3;r++){
+		for (int c = new_col;c<new_col+3;c++){
+			if (sudoku[r][c]==val)
+				return 1;}}
   return 0;
-  // END TODO
+
 }
 
 // Function: is_val_valid
@@ -47,20 +60,51 @@ int is_val_in_3x3_zone(const int val, const int i, const int j, const int sudoku
 int is_val_valid(const int val, const int i, const int j, const int sudoku[9][9]) {
 
   assert(i>=0 && i<9 && j>=0 && j<9);
+	if (is_val_in_row(val,i,sudoku)==1)
+		return 0;
+	if (is_val_in_col(val,j,sudoku)==1)
+		return 0;
+	if (is_val_in_3x3_zone(val,i,j,sudoku)==1)
+		return 0;
 
-  // BEG TODO
   return 1;
-  // END TODO
+
 }
+
+int cells_full(const int sudoku[9][9]){
+	for (int i = 0;i<9;i++){
+		for (int j =0;j<9;j++){
+			if (sudoku[i][j]==0)
+				return 0;}}
+	return 1;
+}
+
+int cells_not_full(const int sudoku[9][9]){
+	for (int i = 0;i<9;i++){
+		for (int j =0;j<9;j++){
+			if (sudoku[i][j]==0)
+			return i,j;}}   //It can not pass 2 values. use pointer instead
+}
+
 
 // Procedure: solve_sudoku
 // Solve the given sudoku instance.
 int solve_sudoku(int sudoku[9][9]) {
-
-  // BEG TODO.
+	int i,j;
+	if (cells_full(sudoku)==1)
+		return 1;
+	else
+		i,j = cells_not_full(sudoku);
+	for (int val = 1;val<=9;val++){
+		if (is_val_valid(val,i,j,sudoku)==1){
+			sudoku[i][j] = val;
+			if (solve_sudoku(sudoku))
+				return 1;
+			sudoku[i][j] = 0;
+			}
+	}
 
   return 0;
-  // END TODO.
 }
 
 // Procedure: print_sudoku
