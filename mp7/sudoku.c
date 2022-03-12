@@ -84,7 +84,6 @@ int cells_full(const int sudoku[9][9]){
 //function:cells_not_full_i
 //return the i (row) value of the first empty cell
 int cells_not_full_i(const int sudoku[9][9]){
-	int ij[2]={0};
 	for (int i = 0;i<9;i++){
 		for (int j =0;j<9;j++){
 			if (sudoku[i][j]==0)
@@ -94,7 +93,6 @@ int cells_not_full_i(const int sudoku[9][9]){
 //function:cells_not_full_j
 //return the j (column) value of the first empty cell
 int cells_not_full_j(const int sudoku[9][9]){
-	int ij[2]={0};
 	for (int i = 0;i<9;i++){
 		for (int j =0;j<9;j++){
 			if (sudoku[i][j]==0)
