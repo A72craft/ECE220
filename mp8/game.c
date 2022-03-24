@@ -1,3 +1,8 @@
+/*
+*
+*
+*
+*/
 #include "game.h"
 
 
@@ -14,8 +19,10 @@ game * make_game(int rows, int cols)
     mygame->cells = malloc(rows*cols*sizeof(cell));
 
     //YOUR CODE STARTS HERE:  Initialize all other variables in game struct
-
-
+	struct game = {rows,cols,0};
+	for (int i = 0;i<rows;i++){
+		for (int j = 0; j<cols;j++){
+			cell[i][j] = -1;}}
     return mygame;
 }
 
@@ -32,7 +39,10 @@ void remake_game(game ** _cur_game_ptr,int new_rows,int new_cols)
 	(*_cur_game_ptr)->cells = malloc(new_rows*new_cols*sizeof(cell));
 
 	 //YOUR CODE STARTS HERE:  Re-initialize all other variables in game struct
-
+	struct game = {new_rows,new_cols,0};
+	for (int i = 0;i<new_rows;i++){
+		for (int j = 0; j<new_cols;j++){
+			cell[i][j] = -1;}}
 	return;	
 }
 
@@ -54,8 +64,11 @@ cell * get_cell(game * cur_game, int row, int col)
 */
 {
     //YOUR CODE STARTS HERE
-
+	r = cur_game.rows;
+	c = cur_game.cols;
+	if(row < 0 || col < 0 || row>r || col>c)
     return NULL;
+	
 }
 
 int move_w(game * cur_game)
