@@ -4,7 +4,11 @@
 *
 */
 #include "game.h"
-
+void copy_array(const int array[],int copy[], int size);
+void copy_array(const int array[],int copy[], int size){
+	for (int i = 0;i<size;i++){
+		copy[i]=array[i];}
+}
 
 game * make_game(int rows, int cols)
 /*! Create an instance of a game structure with the given number of rows
@@ -19,10 +23,12 @@ game * make_game(int rows, int cols)
     mygame->cells = malloc(rows*cols*sizeof(cell));
 
     //YOUR CODE STARTS HERE:  Initialize all other variables in game struct
-	struct game = {rows,cols,0};
+	mygame->rows = rows;
+	mygame->cols = cols;
+	mygame->score = 0;
 	for (int i = 0;i<rows;i++){
 		for (int j = 0; j<cols;j++){
-			cell[i][j] = -1;}}
+			mygame.cells[i][j] = -1;}}
     return mygame;
 }
 
@@ -39,10 +45,12 @@ void remake_game(game ** _cur_game_ptr,int new_rows,int new_cols)
 	(*_cur_game_ptr)->cells = malloc(new_rows*new_cols*sizeof(cell));
 
 	 //YOUR CODE STARTS HERE:  Re-initialize all other variables in game struct
-	struct game = {new_rows,new_cols,0};
+	(*_cur_game_ptr)->rows = new_rows;
+	(*_cur_game_ptr)->cols = new_cols;
+	(*_cur_game_ptr)->score = 0;
 	for (int i = 0;i<new_rows;i++){
 		for (int j = 0; j<new_cols;j++){
-			cell[i][j] = -1;}}
+			(*_cur_game_ptr).cells[i][j] = -1;}}
 	return;	
 }
 
@@ -64,11 +72,12 @@ cell * get_cell(game * cur_game, int row, int col)
 */
 {
     //YOUR CODE STARTS HERE
-	r = cur_game.rows;
-	c = cur_game.cols;
+	int r = cur_game->rows;
+	int c = cur_game->cols;
+	cell acell;
 	if(row < 0 || col < 0 || row>r || col>c)
     return NULL;
-	
+	return acell;
 }
 
 int move_w(game * cur_game)
@@ -80,27 +89,107 @@ int move_w(game * cur_game)
 */
 {
     //YOUR CODE STARTS HERE
-
+	int rows = cur_game->rows; // get the rows and columns
+	int cols = cur_game->cols;
+	int flag = 0;
+	for (int j = 0;j<cols;j++){
+		for (int i = 0;i<rows;i++){
+			if(cur_game.cells[i][j]!=-1){
+				if(i - 1<0)
+				continue;
+				if(cur_game.cells[i-1][j] ==cur_game.cells[i][j]){
+					cur_game.cells[i-1][j] = 2*cur_game.cells[i][j];
+					cur_game.cells[i][j] = -1;
+					flag = 1;}
+				else if (cur_game.cells[i-1][j] == -1){
+					cur_game.cells[i-1][j] = cur_game.cells[i][j];
+					cur_game.cells[i][j] = -1;
+					flag = 1;}	
+				}
+			}
+		}	
+	if (flag == 0)
+	return 0;
     return 1;
 };
 
 int move_s(game * cur_game) //slide down
 {
     //YOUR CODE STARTS HERE
-
+	int rows = cur_game->rows; // get the rows and columns
+	int cols = cur_game->cols;
+	int flag = 0;
+	for (int j = 0;j<cols;j++){
+		for (int i = rows-1;i>=0;i--){
+			if(cur_game.cells[i][j]!=-1){
+				if(i + 1>=rows)
+				continue;
+				if(cur_game.cells[i+1][j] ==cur_game.cells[i][j]){
+					cur_game.cells[i+1][j] = 2*cur_game.cells[i][j];
+					cur_game.cells[i][j] = -1;
+					flag = 1;}
+				else if (cur_game.cells[i+1][j] == -1){
+					cur_game.cells[i+1][j] = cur_game.cells[i][j];
+					cur_game.cells[i][j] = -1;
+					flag = 1;}	
+				}
+			}
+		}	
+	if (flag == 0)
+	return 0;
     return 1;
 };
 
 int move_a(game * cur_game) //slide left
 {
     //YOUR CODE STARTS HERE
-
+	int rows = cur_game->rows; // get the rows and columns
+	int cols = cur_game->cols;
+	int flag = 0;
+	for (int i = 0;i<rows;i++){
+		for (int j = 0;j<cols;j++){
+			if(cur_game.cells[i][j]!=-1){
+				if(j - 1<0)
+				continue;
+				if(cur_game.cells[i][j-1] ==cur_game.cells[i][j]){
+					cur_game.cells[i][j-1] = 2*cur_game.cells[i][j];
+					cur_game.cells[i][j] = -1;
+					flag = 1;}
+				else if (cur_game.cells[i][j-1] == -1){
+					cur_game.cells[i][j-1] = cur_game.cells[i][j];
+					cur_game.cells[i][j] = -1;
+					flag = 1;}	
+				}
+			}
+		}	
+	if (flag == 0)
+	return 0;
     return 1;
 };
 
 int move_d(game * cur_game){ //slide to the right
     //YOUR CODE STARTS HERE
-
+	int rows = cur_game->rows; // get the rows and columns
+	int cols = cur_game->cols;
+	int flag = 0;
+	for (int i = 0;i<rows;i++){
+		for (int j = cols-1;j>=0;j--){
+			if(cur_game.cells[i][j]!=-1){
+				if(j +1>=cols)
+				continue;
+				if(cur_game.cells[i][j+1] ==cur_game.cells[i][j]){
+					cur_game.cells[i][j+1] = 2*cur_game.cells[i][j];
+					cur_game.cells[i][j] = -1;
+					flag = 1;}
+				else if (cur_game.cells[i][j+1] == -1){
+					cur_game.cells[i][j+1] = cur_game.cells[i][j];
+					cur_game.cells[i][j] = -1;
+					flag = 1;}	
+				}
+			}
+		}	
+	if (flag == 0)
+	return 0;
     return 1;
 };
 
@@ -111,8 +200,18 @@ int legal_move_check(game * cur_game)
  */
 {
     //YOUR CODE STARTS HERE
-
+	int rows = cur_game->rows; // get the rows and columns
+	int cols = cur_game->cols;
+	int size = rows*cols;
+	int copy[size];
+	copy_array(cur_game->cells,copy,size);
+	if(move_w(cur_game)==1 ||move_a(cur_game)==1 ||move_s(cur_game)==1 ||move_d(cur_game)==1)
     return 1;
+	for(int i = 0;i<rows;i++){
+		for (int j = 0;j<cols;j++){
+			if(cur_game.cells[i][j] == -1)
+			return 1;}}
+	return 0;
 }
 
 
