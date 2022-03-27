@@ -136,36 +136,30 @@ int move_s(game * cur_game) //slide down
 	int cols = cur_game->cols;
 	int flag = 0;
 	for (int j = 0;j<cols;j++){
-		for (int i = rows-1;i>=0;i--){
-			if(cur_game->cells[i*cols+j]!=-1){
-				if(i + 1>=rows)
-				continue;
-				for(int k = rows - i -1;k>0;k--){
-					if (cur_game->cells[(i+k)*cols+j] == -1){
-						cur_game->cells[(i+k)*cols+j] = cur_game->cells[i*cols+j];
+		for (int i = rows-1;i>=0;i--){ //for every item,counting from bottom to top
+			if(cur_game->cells[i*cols+j]!=-1){ //if not empty 
+				for(int k = rows - 1;k>i;k--){
+					if(cur_game->cells[k*cols+j] == -1){
+						cur_game->cells[k*cols+j] = cur_game->cells[i*cols+j];
 						cur_game->cells[i*cols+j] = -1;
 						flag = 1;
 						break;}}}}}
-////////////////////////////
+///////////////////////////////////////////
 	for (int j = 0;j<cols;j++){
-		for (int i = rows-1;i>=0;i--){
-			if(cur_game->cells[i*cols+j]!=-1){
-				if(i + 1>=rows)
-				continue;
-				if(cur_game->cells[(i+1)*cols+j] ==cur_game->cells[i*cols+j]){
-					cur_game->cells[(i+1)*cols+j] = 2*cur_game->cells[i*cols+j];
-					cur_game->score = 2*cur_game->cells[i*cols+j] + cur_game->score;
-					cur_game->cells[i*cols+j] = -1;
+		for (int i = rows-1;i>=0;i--){ //for every item,counting from top to bottom
+			if(cur_game->cells[i*cols+j]!=-1){ //if not empty 
+				if(cur_game->cells[i*cols+j] == cur_game->cells[(i-1)*cols+j]){
+					cur_game->cells[i*cols+j] = 2*cur_game->cells[i*cols+j];
+					cur_game->cells[(i-1)*cols+j] = -1;
+					cur_game->score = cur_game->score + 2*cur_game->cells[i*cols+j];
 					flag = 1;}}}}
-////////////////////////////
+///////////////////////////////////////////
 	for (int j = 0;j<cols;j++){
-		for (int i = rows-1;i>=0;i--){
-			if(cur_game->cells[i*cols+j]!=-1){
-				if(i + 1>=rows)
-				continue;
-				for(int k = rows - i -1;k>0;k--){
-					if (cur_game->cells[(i+k)*cols+j] == -1){
-						cur_game->cells[(i+k)*cols+j] = cur_game->cells[i*cols+j];
+		for (int i = rows-1;i>=0;i--){ //for every item,counting from bottom to top
+			if(cur_game->cells[i*cols+j]!=-1){ //if not empty 
+				for(int k = rows - 1;k>i;k--){
+					if(cur_game->cells[k*cols+j] == -1){
+						cur_game->cells[k*cols+j] = cur_game->cells[i*cols+j];
 						cur_game->cells[i*cols+j] = -1;
 						flag = 1;
 						break;}}}}}
@@ -181,36 +175,30 @@ int move_a(game * cur_game) //slide left
 	int cols = cur_game->cols;
 	int flag = 0;
 	for (int i = 0;i<rows;i++){
-		for (int j = 0;j<cols;j++){
-			if(cur_game->cells[i*cols+j]!=-1){
-				if(j - 1<0)
-				continue;
-				for (int k = j-1;k>0;k--){
-					if (cur_game->cells[i*cols+(j-k)] == -1){
-						cur_game->cells[i*cols+(j-k)] = cur_game->cells[i*cols+j];
+		for (int j = 0;j<cols;j++){ //for every item,counting from top to bottom
+			if(cur_game->cells[i*cols+j]!=-1){ //if not empty 
+				for(int k = 0;k<j;k++){
+					if(cur_game->cells[i*cols+k] == -1){
+						cur_game->cells[i*cols+k] = cur_game->cells[i*cols+j];
 						cur_game->cells[i*cols+j] = -1;
 						flag = 1;
 						break;}}}}}
-/////////////////////////////////////
+///////////////////////////////////////////
 	for (int i = 0;i<rows;i++){
-		for (int j = 0;j<cols;j++){
-			if(cur_game->cells[i*cols+j]!=-1){
-				if(j - 1<0)
-				continue;
-				if(cur_game->cells[i*cols+(j-1)] ==cur_game->cells[i*cols+j]){
-					cur_game->cells[i*cols+(j-1)] = 2*cur_game->cells[i*cols+j];
-					cur_game->score = 2*cur_game->cells[i*cols+j] + cur_game->score;
-					cur_game->cells[i*cols+j] = -1;
+		for (int j = 0;j<cols;j++){ //for every item,counting from top to bottom
+			if(cur_game->cells[i*cols+j]!=-1){ //if not empty 
+				if(cur_game->cells[i*cols+(j+1)] == cur_game->cells[i*cols+j]){
+					cur_game->cells[i*cols+j] = 2*cur_game->cells[i*cols+j];
+					cur_game->cells[i*cols+(j+1)] = -1;
+					cur_game->score = cur_game->score + 2*cur_game->cells[i*cols+j];
 					flag = 1;}}}}
-/////////////////////////////////////
+///////////////////////////////////////////
 	for (int i = 0;i<rows;i++){
-		for (int j = 0;j<cols;j++){
-			if(cur_game->cells[i*cols+j]!=-1){
-				if(j - 1<0)
-				continue;
-				for (int k = j-1;k>0;k--){
-					if (cur_game->cells[i*cols+(j-k)] == -1){
-						cur_game->cells[i*cols+(j-k)] = cur_game->cells[i*cols+j];
+		for (int j = 0;j<cols;j++){ //for every item,counting from top to bottom
+			if(cur_game->cells[i*cols+j]!=-1){ //if not empty 
+				for(int k = 0;k<j;k++){
+					if(cur_game->cells[i*cols+k] == -1){
+						cur_game->cells[i*cols+k] = cur_game->cells[i*cols+j];
 						cur_game->cells[i*cols+j] = -1;
 						flag = 1;
 						break;}}}}}
@@ -225,36 +213,30 @@ int move_d(game * cur_game){ //slide to the right
 	int cols = cur_game->cols;
 	int flag = 0;
 	for (int i = 0;i<rows;i++){
-		for (int j = cols-1;j>=0;j--){
-			if(cur_game->cells[i*cols+j]!=-1){
-				if(j + 1>=cols) //ignore the rightmost item
-				continue;
-				for(int k = cols - j -1;k>0;k--){
-					if (cur_game->cells[(i)*cols+(j+k)] == -1){
-						cur_game->cells[(i)*cols+(j+k)] = cur_game->cells[i*cols+j];
+		for (int j = cols - 1;j>=0;j--){ //for every item,counting from top to bottom
+			if(cur_game->cells[i*cols+j]!=-1){ //if not empty 
+				for(int k = cols - 1;k>j;k--){
+					if(cur_game->cells[i*cols+k] == -1){
+						cur_game->cells[i*cols+k] = cur_game->cells[i*cols+j];
 						cur_game->cells[i*cols+j] = -1;
 						flag = 1;
 						break;}}}}}
-////////////////////////////
+///////////////////////////////////////////
 	for (int i = 0;i<rows;i++){
-		for (int j = cols-1;j>=0;j--){
-			if(cur_game->cells[i*cols+j]!=-1){
-				if(j + 1>=cols)
-				continue;
-				if(cur_game->cells[i*cols+(j+1)] ==cur_game->cells[i*cols+j]){
-					cur_game->cells[i*cols+(j+1)] = 2*cur_game->cells[i*cols+j];
-					cur_game->score = 2*cur_game->cells[i*cols+j] + cur_game->score;
-					cur_game->cells[i*cols+j] = -1;
+		for (int j = cols - 1;j>=0;j--){ //for every item,counting from top to bottom
+			if(cur_game->cells[i*cols+j]!=-1){ //if not empty 
+				if(cur_game->cells[i*cols+(j-1)] == cur_game->cells[i*cols+j]){
+					cur_game->cells[i*cols+j] = 2*cur_game->cells[i*cols+j];
+					cur_game->cells[i*cols+(j-1)] = -1;
+					cur_game->score = cur_game->score + 2*cur_game->cells[i*cols+j];
 					flag = 1;}}}}
-////////////////////////////
+///////////////////////////////////////////
 	for (int i = 0;i<rows;i++){
-		for (int j = cols-1;j>=0;j--){
-			if(cur_game->cells[i*cols+j]!=-1){
-				if(j + 1>=cols)
-				continue;
-				for(int k = cols - j -1;k>0;k--){
-					if (cur_game->cells[i*cols+(j+k)] == -1){
-						cur_game->cells[i*cols+(j+k)] = cur_game->cells[i*cols+j];
+		for (int j = cols - 1;j>=0;j--){ //for every item,counting from top to bottom
+			if(cur_game->cells[i*cols+j]!=-1){ //if not empty 
+				for(int k = cols - 1;k>j;k--){
+					if(cur_game->cells[i*cols+k] == -1){
+						cur_game->cells[i*cols+k] = cur_game->cells[i*cols+j];
 						cur_game->cells[i*cols+j] = -1;
 						flag = 1;
 						break;}}}}}
