@@ -75,11 +75,13 @@ cell * get_cell(game * cur_game, int row, int col)
 	int r = cur_game->rows;
 	int c = cur_game->cols;
 	cell * acell;
-	if(row < 0 || col < 0 || row>r || col>c)
+	if(row < 0 || col < 0 || row>=r || col>=c)
     return NULL;
-	acell= cur_game->cells;
-	return acell;
+	else{
+	acell= &cur_game->cells[(row)*c+col];
+	return acell;}
 }
+
 
 int move_w(game * cur_game)
 /*!Slides all of the tiles in cur_game upwards. If a tile matches with the 
@@ -95,40 +97,35 @@ int move_w(game * cur_game)
 	int flag = 0;
 ///////////////////////////////////////////
 	for (int j = 0;j<cols;j++){
-		for (int i = 0;i<rows;i++){ //for every item,counting from top to bottom
+		for (int i = 1;i<rows;i++){ //for every item,counting from top to bottom
 			if(cur_game->cells[i*cols+j]!=-1){ //if not empty 
-				if(i == 0)  //ignore the first row
-				continue;
-				for (int k = i-1;k>0;k--){
-				    if (cur_game->cells[(i-k)*cols+j] == -1){  
-					cur_game->cells[(i-k)*cols+j] = cur_game->cells[i*cols+j];
-					cur_game->cells[i*cols+j] = -1;
-					flag = 1;
-					break;}}}}}
-///////////////////////////////////////////
-	for (int j = 0;j<cols;j++){
-		for (int i = 0;i<rows;i++){ //for every item,counting from top to bottom
-			if(cur_game->cells[i*cols+j]!=-1){ //if not empty 
-				if(i == 0)  //ignore the first row
-				continue;
-					if(cur_game->cells[(i-1)*cols+j] ==cur_game->cells[i*cols+j]){
-						cur_game->cells[(i-1)*cols+j] = 2*cur_game->cells[i*cols+j];
+				for(int k = 0;k<i;k++){
+					if(cur_game->cells[k*cols+j] == -1){
+						cur_game->cells[k*cols+j] = cur_game->cells[i*cols+j];
 						cur_game->cells[i*cols+j] = -1;
-						flag = 1;}}}}
+						flag = 1;
+						break;}}}}}
 ///////////////////////////////////////////
 	for (int j = 0;j<cols;j++){
-		for (int i = 0;i<rows;i++){ //for every item,counting from top to bottom
+		for (int i = 0;i<rows-1;i++){ //for every item,counting from top to bottom
 			if(cur_game->cells[i*cols+j]!=-1){ //if not empty 
-				if(i == 0)  //ignore the first row
-				continue;
-				for (int k = i-1;k>0;k--){
-				    if (cur_game->cells[(i-k)*cols+j] == -1){   
-					cur_game->cells[(i-k)*cols+j] = cur_game->cells[i*cols+j];
-					cur_game->cells[i*cols+j] = -1;
-					flag = 1;
-					break;}}}}}
+				if(cur_game->cells[i*cols+j] == cur_game->cells[(i+1)*cols+j]){
+					cur_game->cells[i*cols+j] = 2*cur_game->cells[i*cols+j];
+					cur_game->cells[(i+1)*cols+j] = -1;
+					cur_game->score = cur_game->score + 2*cur_game->cells[i*cols+j];
+					flag = 1;}}}}
+///////////////////////////////////////////
+	for (int j = 0;j<cols;j++){
+		for (int i = 1;i<rows;i++){ //for every item,counting from top to bottom
+			if(cur_game->cells[i*cols+j]!=-1){ //if not empty 
+				for(int k = 0;k<i;k++){
+					if(cur_game->cells[k*cols+j] == -1){
+						cur_game->cells[k*cols+j] = cur_game->cells[i*cols+j];
+						cur_game->cells[i*cols+j] = -1;
+						flag = 1;
+						break;}}}}}
 	if (flag == 0)
-	return 0;
+		return 0;
     return 1;
 };
 
@@ -157,6 +154,7 @@ int move_s(game * cur_game) //slide down
 				continue;
 				if(cur_game->cells[(i+1)*cols+j] ==cur_game->cells[i*cols+j]){
 					cur_game->cells[(i+1)*cols+j] = 2*cur_game->cells[i*cols+j];
+					cur_game->score = 2*cur_game->cells[i*cols+j] + cur_game->score;
 					cur_game->cells[i*cols+j] = -1;
 					flag = 1;}}}}
 ////////////////////////////
@@ -201,6 +199,7 @@ int move_a(game * cur_game) //slide left
 				continue;
 				if(cur_game->cells[i*cols+(j-1)] ==cur_game->cells[i*cols+j]){
 					cur_game->cells[i*cols+(j-1)] = 2*cur_game->cells[i*cols+j];
+					cur_game->score = 2*cur_game->cells[i*cols+j] + cur_game->score;
 					cur_game->cells[i*cols+j] = -1;
 					flag = 1;}}}}
 /////////////////////////////////////
@@ -244,6 +243,7 @@ int move_d(game * cur_game){ //slide to the right
 				continue;
 				if(cur_game->cells[i*cols+(j+1)] ==cur_game->cells[i*cols+j]){
 					cur_game->cells[i*cols+(j+1)] = 2*cur_game->cells[i*cols+j];
+					cur_game->score = 2*cur_game->cells[i*cols+j] + cur_game->score;
 					cur_game->cells[i*cols+j] = -1;
 					flag = 1;}}}}
 ////////////////////////////
