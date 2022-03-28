@@ -1,7 +1,7 @@
-/*
-*
-*
-*
+/* partner: jinj2(me)
+* This code contains the function that will make the game,remake the game, check for cells,
+*move the game in four directions, and check if anything else can be moved. Apart from the 
+*given function I also created one that will copy a array.
 */
 #include "game.h"
 void copy_array(const int array[],int copy[], int size);
@@ -11,45 +11,32 @@ void copy_array(const int array[],int copy[], int size){
 }
 
 game * make_game(int rows, int cols)
-/*! Create an instance of a game structure with the given number of rows
-    and columns, initializing elements to -1 and return a pointer
-    to it. (See game.h for the specification for the game data structure) 
-    The needed memory should be dynamically allocated with the malloc family
-    of functions.
-*/
 {
     //Dynamically allocate memory for game and cells (DO NOT modify this)
     game * mygame = malloc(sizeof(game));
     mygame->cells = malloc(rows*cols*sizeof(cell));
 
-    //YOUR CODE STARTS HERE:  Initialize all other variables in game struct
 	mygame->rows = rows;
-	mygame->cols = cols;
+	mygame->cols = cols;  //initialize all variables
 	mygame->score = 0;
 	for (int i = 0;i<rows;i++){
-		for (int j = 0; j<cols;j++){
+		for (int j = 0; j<cols;j++){  //for all cells, assign -1
 			mygame->cells[i*cols+j] = -1;}}
     return mygame;
 }
 
 void remake_game(game ** _cur_game_ptr,int new_rows,int new_cols)
-/*! Given a game structure that is passed by reference, change the
-	game structure to have the given number of rows and columns. Initialize
-	the score and all elements in the cells to -1. Make sure that any 
-	memory previously allocated is not lost in this function.	
-*/
 {
 	/*Frees dynamically allocated memory used by cells in previous game,
 	 then dynamically allocates memory for cells in new game.  DO NOT MODIFY.*/
 	free((*_cur_game_ptr)->cells);
 	(*_cur_game_ptr)->cells = malloc(new_rows*new_cols*sizeof(cell));
 
-	 //YOUR CODE STARTS HERE:  Re-initialize all other variables in game struct
 	(*_cur_game_ptr)->rows = new_rows;
-	(*_cur_game_ptr)->cols = new_cols;
+	(*_cur_game_ptr)->cols = new_cols;  //Re-initialize all variables
 	(*_cur_game_ptr)->score = 0;
 	for (int i = 0;i<new_rows;i++){
-		for (int j = 0; j<new_cols;j++){
+		for (int j = 0; j<new_cols;j++){  //for all cells, assign -1
 			(*_cur_game_ptr)->cells[i*new_cols+j] = -1;}}
 	return;	
 }
@@ -65,31 +52,19 @@ void destroy_game(game * cur_game)
 }
 
 cell * get_cell(game * cur_game, int row, int col)
-/*! Given a game, a row, and a column, return a pointer to the corresponding
-    cell on the game. (See game.h for game data structure specification)
-    This function should be handy for accessing game cells. Return NULL
-	if the row and col coordinates do not exist.
-*/
 {
-    //YOUR CODE STARTS HERE
 	int r = cur_game->rows;
-	int c = cur_game->cols;
+	int c = cur_game->cols;  //retrive the data
 	cell * acell;
-	if(row < 0 || col < 0 || row>=r || col>=c)
-    return NULL;
+	if(row < 0 || col < 0 || row>=r || col>=c)  //if out of bounds
+    return NULL;   //return null
 	else{
-	acell= &cur_game->cells[(row)*c+col];
+	acell = &cur_game->cells[(row)*c+col];  //assign the pointer
 	return acell;}
 }
 
 
 int move_w(game * cur_game)
-/*!Slides all of the tiles in cur_game upwards. If a tile matches with the 
-   one above it, the tiles are merged by adding their values together. When
-   tiles merge, increase the score by the value of the new tile. A tile can 
-   not merge twice in one turn. If sliding the tiles up does not cause any 
-   cell to change value, w is an invalid move and return 0. Otherwise, return 1. 
-*/
 {
     //YOUR CODE STARTS HERE
 	int rows = cur_game->rows; // get the rows and columns
@@ -100,9 +75,9 @@ int move_w(game * cur_game)
 		for (int i = 1;i<rows;i++){ //for every item,counting from top to bottom
 			if(cur_game->cells[i*cols+j]!=-1){ //if not empty 
 				for(int k = 0;k<i;k++){
-					if(cur_game->cells[k*cols+j] == -1){
-						cur_game->cells[k*cols+j] = cur_game->cells[i*cols+j];
-						cur_game->cells[i*cols+j] = -1;
+					if(cur_game->cells[k*cols+j] == -1){ //if found an empty cell
+						cur_game->cells[k*cols+j] = cur_game->cells[i*cols+j]; //put the value in the empty cell
+						cur_game->cells[i*cols+j] = -1;  //set original to -1
 						flag = 1;
 						break;}}}}}
 ///////////////////////////////////////////
@@ -110,7 +85,7 @@ int move_w(game * cur_game)
 		for (int i = 0;i<rows-1;i++){ //for every item,counting from top to bottom
 			if(cur_game->cells[i*cols+j]!=-1){ //if not empty 
 				if(cur_game->cells[i*cols+j] == cur_game->cells[(i+1)*cols+j]){
-					cur_game->cells[i*cols+j] = 2*cur_game->cells[i*cols+j];
+					cur_game->cells[i*cols+j] = 2*cur_game->cells[i*cols+j];//merge by *2 the value and set the other to -1
 					cur_game->cells[(i+1)*cols+j] = -1;
 					cur_game->score = cur_game->score + 2*cur_game->cells[i*cols+j];
 					flag = 1;}}}}
@@ -139,17 +114,17 @@ int move_s(game * cur_game) //slide down
 		for (int i = rows-1;i>=0;i--){ //for every item,counting from bottom to top
 			if(cur_game->cells[i*cols+j]!=-1){ //if not empty 
 				for(int k = rows - 1;k>i;k--){
-					if(cur_game->cells[k*cols+j] == -1){
-						cur_game->cells[k*cols+j] = cur_game->cells[i*cols+j];
-						cur_game->cells[i*cols+j] = -1;
+					if(cur_game->cells[k*cols+j] == -1){ //if found an empty cell
+						cur_game->cells[k*cols+j] = cur_game->cells[i*cols+j]; //put the value in the empty cell
+						cur_game->cells[i*cols+j] = -1; //set original to -1
 						flag = 1;
 						break;}}}}}
 ///////////////////////////////////////////
 	for (int j = 0;j<cols;j++){
-		for (int i = rows-1;i>=0;i--){ //for every item,counting from top to bottom
+		for (int i = rows-1;i>0;i--){ //for every item,counting from top to bottom
 			if(cur_game->cells[i*cols+j]!=-1){ //if not empty 
 				if(cur_game->cells[i*cols+j] == cur_game->cells[(i-1)*cols+j]){
-					cur_game->cells[i*cols+j] = 2*cur_game->cells[i*cols+j];
+					cur_game->cells[i*cols+j] = 2*cur_game->cells[i*cols+j];//merge by *2 the value and set the other to -1
 					cur_game->cells[(i-1)*cols+j] = -1;
 					cur_game->score = cur_game->score + 2*cur_game->cells[i*cols+j];
 					flag = 1;}}}}
@@ -175,20 +150,20 @@ int move_a(game * cur_game) //slide left
 	int cols = cur_game->cols;
 	int flag = 0;
 	for (int i = 0;i<rows;i++){
-		for (int j = 0;j<cols;j++){ //for every item,counting from top to bottom
+		for (int j = 0;j<cols;j++){ //for every item,counting from left to right
 			if(cur_game->cells[i*cols+j]!=-1){ //if not empty 
 				for(int k = 0;k<j;k++){
-					if(cur_game->cells[i*cols+k] == -1){
-						cur_game->cells[i*cols+k] = cur_game->cells[i*cols+j];
-						cur_game->cells[i*cols+j] = -1;
+					if(cur_game->cells[i*cols+k] == -1){ //if found an empty cell
+						cur_game->cells[i*cols+k] = cur_game->cells[i*cols+j]; //put the value in the cell
+						cur_game->cells[i*cols+j] = -1; //set original to -1
 						flag = 1;
 						break;}}}}}
 ///////////////////////////////////////////
 	for (int i = 0;i<rows;i++){
-		for (int j = 0;j<cols;j++){ //for every item,counting from top to bottom
+		for (int j = 0;j<cols-1;j++){ //for every item,counting from top to bottom
 			if(cur_game->cells[i*cols+j]!=-1){ //if not empty 
 				if(cur_game->cells[i*cols+(j+1)] == cur_game->cells[i*cols+j]){
-					cur_game->cells[i*cols+j] = 2*cur_game->cells[i*cols+j];
+					cur_game->cells[i*cols+j] = 2*cur_game->cells[i*cols+j];//merge by *2 the value and set the other to -1
 					cur_game->cells[i*cols+(j+1)] = -1;
 					cur_game->score = cur_game->score + 2*cur_game->cells[i*cols+j];
 					flag = 1;}}}}
@@ -213,20 +188,20 @@ int move_d(game * cur_game){ //slide to the right
 	int cols = cur_game->cols;
 	int flag = 0;
 	for (int i = 0;i<rows;i++){
-		for (int j = cols - 1;j>=0;j--){ //for every item,counting from top to bottom
+		for (int j = cols - 1;j>=0;j--){ //for every item,counting from right to left
 			if(cur_game->cells[i*cols+j]!=-1){ //if not empty 
 				for(int k = cols - 1;k>j;k--){
-					if(cur_game->cells[i*cols+k] == -1){
-						cur_game->cells[i*cols+k] = cur_game->cells[i*cols+j];
-						cur_game->cells[i*cols+j] = -1;
+					if(cur_game->cells[i*cols+k] == -1){ //if found an empty cell
+						cur_game->cells[i*cols+k] = cur_game->cells[i*cols+j]; //put the value in the empty cell
+						cur_game->cells[i*cols+j] = -1; //set original to -1
 						flag = 1;
 						break;}}}}}
 ///////////////////////////////////////////
 	for (int i = 0;i<rows;i++){
-		for (int j = cols - 1;j>=0;j--){ //for every item,counting from top to bottom
+		for (int j = cols - 1;j>0;j--){ //for every item,counting from top to bottom
 			if(cur_game->cells[i*cols+j]!=-1){ //if not empty 
 				if(cur_game->cells[i*cols+(j-1)] == cur_game->cells[i*cols+j]){
-					cur_game->cells[i*cols+j] = 2*cur_game->cells[i*cols+j];
+					cur_game->cells[i*cols+j] = 2*cur_game->cells[i*cols+j]; //merge by *2 the value and set the other to -1
 					cur_game->cells[i*cols+(j-1)] = -1;
 					cur_game->score = cur_game->score + 2*cur_game->cells[i*cols+j];
 					flag = 1;}}}}
@@ -256,13 +231,41 @@ int legal_move_check(game * cur_game)
 	int cols = cur_game->cols;
 	int size = rows*cols;
 	int copy[size];
+	int i,j;
 	copy_array(cur_game->cells,copy,size);
-	if(move_w(cur_game)==1 ||move_a(cur_game)==1 ||move_s(cur_game)==1 ||move_d(cur_game)==1)
-    return 1;
-	for(int i = 0;i<rows;i++){
-		for (int j = 0;j<cols;j++){
-			if(cur_game->cells[i*cols+j] == -1)
+	for(i =0;i<rows;i++){
+		for (j = 0;j<cols;j++){  //find if there is an empty cell
+			if(copy[i*cols+j] == -1)
 			return 1;}}
+	for(i =0;i<rows;i++){
+		for (j = 0;j<cols;j++){
+		if( i == 0 && j == 0){   //case: upperleftmost
+			if(copy[i*cols+j] == copy[(i+1)*cols+j] || copy[i*cols+j] == copy[i*cols+j+1])
+			return 1;}
+		else if( i == 0 && j == cols-1){   //case: upperightmost
+			if(copy[i*cols+j] == copy[(i+1)*cols+j] || copy[i*cols+j] == copy[i*cols+j-1])
+			return 1;}
+		else if( i == rows - 1 && j == 0){   //case: lowerleftmost
+			if(copy[i*cols+j] == copy[(i-1)*cols+j] || copy[i*cols+j] == copy[i*cols+j+1])
+			return 1;}
+		else if( i == rows - 1 && j == cols - 1){   //case: lowerrightmost
+			if(copy[i*cols+j] == copy[(i-1)*cols+j] || copy[i*cols+j] == copy[i*cols+j-1])
+			return 1;}
+		else if( i == 0 ){   //case: upper,but not the leftmost or rightmost
+			if(copy[i*cols+j]==copy[(i+1)*cols+j]||copy[i*cols+j]==copy[i*cols+j+1]||copy[i*cols+j]==copy[i*cols+j-1])
+			return 1;}
+		else if( i == rows - 1 ){   //case: lower,but not the leftmost or rightmost
+			if(copy[i*cols+j]==copy[(i-1)*cols+j]||copy[i*cols+j]==copy[i*cols+j+1]||copy[i*cols+j]==copy[i*cols+j-1])
+			return 1;}
+		else if( j == 0 ){   //case: leftmost,but not the top or bot
+			if(copy[i*cols+j]==copy[(i+1)*cols+j]||copy[i*cols+j]==copy[(i-1)*cols+j]||copy[i*cols+j]==copy[i*cols+j+1])
+			return 1;}
+		else if( j == cols - 1 ){   //case: rightmost,but not the top or bot
+			if(copy[i*cols+j]==copy[(i+1)*cols+j]||copy[i*cols+j]==copy[(i-1)*cols+j]||copy[i*cols+j]==copy[i*cols+j-1])
+			return 1;}
+		else{   //every other case
+			if(copy[i*cols+j]==copy[(i+1)*cols+j]||copy[i*cols+j]==copy[(i-1)*cols+j]||copy[i*cols+j]==copy[i*cols+j-1] ||copy[i*cols+j]==copy[i*cols+j+1])
+			return 1;}}}
 	return 0;
 }
 
