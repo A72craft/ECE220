@@ -12,8 +12,12 @@
  */
 maze_t * createMaze(char * fileName)
 {
-    // Your code here. Make sure to replace following line with your own code.
-    return NULL;
+	FILE *f;
+    maze_t * maze = malloc(sizeof(maze_t));
+	f = fopen(fileName,"r");
+	
+	
+	
 }
 
 /*
@@ -25,7 +29,10 @@ maze_t * createMaze(char * fileName)
  */
 void destroyMaze(maze_t * maze)
 {
-    // Your code here.
+    free(maze->cells);
+	free(maze);
+	maze = NULL;
+	return;
 }
 
 /*
@@ -39,7 +46,31 @@ void destroyMaze(maze_t * maze)
  */
 void printMaze(maze_t * maze)
 {
-    // Your code here.
+    int i,j;
+	int width,height;
+	int stcol,strow,endcol,endrow;
+	width = maze.width;
+	height = maze.height;
+	stcol = maze.startColumn;
+	strow = maze.startRow;
+	endcol = maze.endColumn;
+	endrow = maze.endRow;
+	for(i = 0;i<height;i++){
+		for(j = 0;j<width;j++){
+			if(i == stcol && j ==strow){
+				printf("S");
+				continue;}
+			if(i == endcol && j ==endrow){
+				printf("E");
+				continue;}
+			if(maze->[i][j] == 1){
+				printf("%");
+				continue;}
+			if(maze->[i][j] == 0){
+				printf(" ");
+				continue;}}
+		printf("\n");}
+	return;
 }
 
 /*
