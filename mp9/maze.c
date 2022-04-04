@@ -97,6 +97,9 @@ void printMaze(maze_t * maze)
 			if(maze->cells[i][j] =='%'){
 				printf("%%");
 				continue;}
+			if(maze->cells[i][j] == '*'){
+				printf("*");
+				continue;}
 			if(maze->cells[i][j] ==' '){
 				printf(" ");
 				continue;}}
@@ -113,22 +116,23 @@ void printMaze(maze_t * maze)
  * RETURNS:              0 if the maze is unsolvable, 1 if it is solved
  * SIDE EFFECTS:         Marks maze cells as visited or part of the solution path
  */ 
-int solveMazeDFS(maze_t * maze, int col, int row)
-{
-    if(col >=maze->width || col<0 || row >=maze->height || row<0)
-		return 0;  //If (col, row) outside bounds of the maze return false
-	if(maze->cells[row][col] !=' ')
-		return 0;  //if (col, row) is not an empty cell return false
-	if(col == maze->endColumn && row == maze->endRow)
-		return 1;  //if (col, row) is the end of the maze return true
-	maze->cells[row][col] = '*';
-	if(solveMazeDFS(maze,col-1,row)==1)
-		return 1;
-	if(solveMazeDFS(maze,col+1,row)==1)
-		return 1;
+int solveMazeDFS(maze_t * maze, int col, int row){
+	if(maze->cells[row][col] != 'S'){
+    	if(col >=maze->width || col<0 || row >=maze->height || row<0)
+			return 0;  //If (col, row) outside bounds of the maze return false
+		if(maze->cells[row][col] == 'E')
+			return 1;  //if (col, row) is the end of the maze return true
+		if( maze->cells[row][col] != ' ')
+			return 0;  //if (col, row) is not an empty cell return false
+		maze->cells[row][col] = '*';}
+
 	if(solveMazeDFS(maze,col,row-1)==1)
 		return 1;
 	if(solveMazeDFS(maze,col,row+1)==1)
+		return 1;
+	if(solveMazeDFS(maze,col-1,row)==1)
+		return 1;
+	if(solveMazeDFS(maze,col+1,row)==1)
 		return 1;
 	maze->cells[row][col] = '~';
 	return 0;}
