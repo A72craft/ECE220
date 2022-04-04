@@ -15,24 +15,31 @@ maze_t * createMaze(char * fileName)
 	FILE *f;
 	int i,j;
 	int h,w;
-	char buf[200];
+	char buf;
     maze_t * maze = malloc(sizeof(maze_t));
 	f = fopen(fileName,"r");
-	sscanf(buf,"%d %d",&w,&h);
+	fscanf(f,"%d %d\n",&w,&h);
 	maze->cells = (char**)malloc(h*sizeof(char*));
 	for(i = 0;i<h;i++){
 		maze->cells[i] = (char*)malloc(w*sizeof(char));}
-	for(i = 0;i <h;i++){
+	for(i = 0;i<h;i++){
 		for(j = 0;j<w;j++){
-			fscanf(f,"%c",&maze->cells[i][j]);
-			if(maze->cells[i][j] == "S"){
+			fscanf(f,"%c",&buf);
+			if(buf == 'S'){
 				maze->startColumn = j;
-                maze->startRow = i;}
-			else if(maze->cells[i][j] == "E"){
+                maze->startRow = i;
+				maze->cells[i][j] = buf;}
+			else if(buf == 'E'){
 				maze->endColumn = j;
-                maze->endRow = i;}}}		
+                maze->endRow = i;
+				maze->cells[i][j] = buf;}
+			else if(buf == '\n'){
+				j--;
+				continue;}
+			else{
+				maze->cells[i][j] = buf;}}}
 	maze->height = h;
-	maze->width = w;
+	(*maze).width = w;
 	fclose(f);
 	return maze;
 }
@@ -47,7 +54,10 @@ maze_t * createMaze(char * fileName)
  */
 void destroyMaze(maze_t * maze)
 {
-    free(maze->cells);
+	int i;
+	for(i = 0;i<maze->height;i++){
+    	free(maze->cells[i]);}
+	free(maze->cells);
 	free(maze);
 	maze = NULL;
 	return;
@@ -75,19 +85,19 @@ void printMaze(maze_t * maze)
 	endrow = maze->endRow;
 	for(i = 0;i<height;i++){
 		for(j = 0;j<width;j++){
-			if(i == stcol && j ==strow){
+			if(i == strow && j ==stcol){
 				printf("S");
 				continue;}
-			if(i == endcol && j ==endrow){
+			if(i == endrow && j ==endcol){
 				printf("E");
 				continue;}
-			if(maze->cells[i][j]=="~"){
+			if(maze->cells[i][j]=='~'){
 				printf("~");
 				continue;}
-			if(maze->cells[i][j] =="%"){
+			if(maze->cells[i][j] =='%'){
 				printf("%%");
 				continue;}
-			if(maze->cells[i][j] ==" "){
+			if(maze->cells[i][j] ==' '){
 				printf(" ");
 				continue;}}
 		printf("\n");}
@@ -107,11 +117,11 @@ int solveMazeDFS(maze_t * maze, int col, int row)
 {
     if(col >=maze->width || col<0 || row >=maze->height || row<0)
 		return 0;  //If (col, row) outside bounds of the maze return false
-	if(maze->cells[row][col] !=" ")
+	if(maze->cells[row][col] !=' ')
 		return 0;  //if (col, row) is not an empty cell return false
 	if(col == maze->endColumn && row == maze->endRow)
 		return 1;  //if (col, row) is the end of the maze return true
-	maze->cells[row][col] = "*";
+	maze->cells[row][col] = '*';
 	if(solveMazeDFS(maze,col-1,row)==1)
 		return 1;
 	if(solveMazeDFS(maze,col+1,row)==1)
@@ -120,5 +130,5 @@ int solveMazeDFS(maze_t * maze, int col, int row)
 		return 1;
 	if(solveMazeDFS(maze,col,row+1)==1)
 		return 1;
-	maze->cells[row][col] = "~";
+	maze->cells[row][col] = '~';
 	return 0;}
