@@ -1,43 +1,45 @@
+/*partner: jinj2(me)
+*For this mp 4 functions were created: createMaze,destroyMaze,printMaze,and
+*solveMazeDFS. They each creates the maze,destroys the maze,prints the maze,
+*and solves the maze with recursion.
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include "maze.h"
 
 
 /*
- * createMaze -- Creates and fills a maze structure from the given file
- * INPUTS:       fileName - character array containing the name of the maze file
- * OUTPUTS:      None 
- * RETURN:       A filled maze structure that represents the contents of the input file
- * SIDE EFFECTS: None
+*This function creates a maze with a given file name and scans the file to
+*fill the maze.
  */
 maze_t * createMaze(char * fileName)
 {
 	FILE *f;
 	int i,j;
-	int h,w;
-	char buf;
-    maze_t * maze = malloc(sizeof(maze_t));
+	int h,w; 
+	char buf;    
+    maze_t * maze = malloc(sizeof(maze_t)); //allocate memory for the struct
 	f = fopen(fileName,"r");
-	fscanf(f,"%d %d\n",&w,&h);
-	maze->cells = (char**)malloc(h*sizeof(char*));
+	fscanf(f,"%d %d\n",&w,&h);  //get the rows and columns
+	maze->cells = (char**)malloc(h*sizeof(char*)); //allocate the rows
 	for(i = 0;i<h;i++){
-		maze->cells[i] = (char*)malloc(w*sizeof(char));}
+		maze->cells[i] = (char*)malloc(w*sizeof(char));} //allocate the columns
 	for(i = 0;i<h;i++){
 		for(j = 0;j<w;j++){
-			fscanf(f,"%c",&buf);
+			fscanf(f,"%c",&buf); //get the char one by one
 			if(buf == 'S'){
-				maze->startColumn = j;
+				maze->startColumn = j; //get the starting point 
                 maze->startRow = i;
 				maze->cells[i][j] = buf;}
 			else if(buf == 'E'){
 				maze->endColumn = j;
-                maze->endRow = i;
+                maze->endRow = i; //get the ending point
 				maze->cells[i][j] = buf;}
-			else if(buf == '\n'){
+			else if(buf == '\n'){ //get the newline
 				j--;
 				continue;}
 			else{
-				maze->cells[i][j] = buf;}}}
+				maze->cells[i][j] = buf;}}} //fill in the maze
 	maze->height = h;
 	(*maze).width = w;
 	fclose(f);
@@ -46,31 +48,21 @@ maze_t * createMaze(char * fileName)
 	
 
 /*
- * destroyMaze -- Frees all memory associated with the maze structure, including the structure itself
- * INPUTS:        maze -- pointer to maze structure that contains all necessary information 
- * OUTPUTS:       None
- * RETURN:        None
- * SIDE EFFECTS:  All memory that has been allocated for the maze is freed
+ *this function destroys the maze by setting all memory free.
  */
 void destroyMaze(maze_t * maze)
 {
 	int i;
 	for(i = 0;i<maze->height;i++){
     	free(maze->cells[i]);}
-	free(maze->cells);
+	free(maze->cells); //frees the memory
 	free(maze);
 	maze = NULL;
 	return;
 }
 
 /*
- * printMaze --  Prints out the maze in a human readable format (should look like examples)
- * INPUTS:       maze -- pointer to maze structure that contains all necessary information 
- *               width -- width of the maze
- *               height -- height of the maze
- * OUTPUTS:      None
- * RETURN:       None
- * SIDE EFFECTS: Prints the maze to the console
+ * This function prints the maze.
  */
 void printMaze(maze_t * maze)
 {
@@ -80,13 +72,13 @@ void printMaze(maze_t * maze)
 	width = maze->width;
 	height = maze->height;
 	stcol = maze->startColumn;
-	strow = maze->startRow;
+	strow = maze->startRow;    //get the data from the struct
 	endcol = maze->endColumn;
 	endrow = maze->endRow;
 	for(i = 0;i<height;i++){
-		for(j = 0;j<width;j++){
+		for(j = 0;j<width;j++){  //for the maze
 			if(i == strow && j ==stcol){
-				printf("S");
+				printf("S");     //prints what is in the maze
 				continue;}
 			if(i == endrow && j ==endcol){
 				printf("E");
@@ -103,30 +95,27 @@ void printMaze(maze_t * maze)
 			if(maze->cells[i][j] ==' '){
 				printf(" ");
 				continue;}}
-		printf("\n");}
+		printf("\n");} //prints newline at a new line
 	return;
 }
 
 /*
- * solveMazeManhattanDFS -- recursively solves the maze using depth first search,
- * INPUTS:               maze -- pointer to maze structure with all necessary maze information
- *                       col -- the column of the cell currently beinging visited within the maze
- *                       row -- the row of the cell currently being visited within the maze
- * OUTPUTS:              None
- * RETURNS:              0 if the maze is unsolvable, 1 if it is solved
- * SIDE EFFECTS:         Marks maze cells as visited or part of the solution path
+*This function tries to solve the maze by recursion.It will go down
+*a path until it is stuck. Then it will go back to the point where
+*there is another path.
  */ 
 int solveMazeDFS(maze_t * maze, int col, int row){
-	if(maze->cells[row][col] != 'S'){
-    	if(col >=maze->width || col<0 || row >=maze->height || row<0)
-			return 0;  //If (col, row) outside bounds of the maze return false
-		if(maze->cells[row][col] == 'E')
-			return 1;  //if (col, row) is the end of the maze return true
-		if( maze->cells[row][col] != ' ')
-			return 0;  //if (col, row) is not an empty cell return false
-		maze->cells[row][col] = '*';}
 
-	if(solveMazeDFS(maze,col,row-1)==1)
+    if(col >=maze->width || col<0 || row >=maze->height || row<0)
+		return 0;  //If (col, row) outside bounds of the maze return false
+	if(row == maze->endRow && col ==maze->endColumn){
+		maze->cells[maze->endRow][maze->endColumn] = 'E';
+		maze->cells[maze->startRow][maze->startColumn] = 'S';
+		return 1;} //if (col, row) is the end of the maze return true
+	if( maze->cells[row][col] != ' ' &&maze->cells[row][col] != 'S'&&maze->cells[row][col] != 'E')
+		return 0;  //if (col, row) is not an empty cell return false
+		maze->cells[row][col] = '*'; //set cell as marked and a solution path
+	if(solveMazeDFS(maze,col,row-1)==1) //go up,down,left,and right
 		return 1;
 	if(solveMazeDFS(maze,col,row+1)==1)
 		return 1;
@@ -134,5 +123,5 @@ int solveMazeDFS(maze_t * maze, int col, int row){
 		return 1;
 	if(solveMazeDFS(maze,col+1,row)==1)
 		return 1;
-	maze->cells[row][col] = '~';
+	maze->cells[row][col] = '~'; //set cell as marked and not a solution path
 	return 0;}
