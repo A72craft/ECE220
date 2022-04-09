@@ -5,7 +5,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 void delete_node(sp_tuples * mat_t,int row,int col);
+void sort_node(sp_tuples * mat_t,int row,int col);
 
+//void sort_node(sp_tuples * mat_t,int row,int col)
 void delete_node(sp_tuples * mat_t,int row,int col){
 	int n,nz;
 	n = mat_t->n;
@@ -29,7 +31,8 @@ void delete_node(sp_tuples * mat_t,int row,int col){
 			break;}
 		nodes_prev = nodes;
 		nodes = nodes->next;
-		nodes_next = nodes->next;}
+		nodes_next = nodes->next;
+		mat_t->nz--;}
 		return;
 }
 
@@ -64,26 +67,13 @@ sp_tuples * load_tuples(char* input_file)
 /////////////////////scan all the other lines
 	while(1){
 		check = fscanf(f,"%d %d %lf\n",&row,&col,&val);
-		if(check == 0)
+		if(check == EOF)
 			break;
 		if(val == 0)
 			continue;
 		set_tuples(tuples, row, col, val);}
-
-/*backup, if sort cannot be done while scaning
-	nodes->next = (*sp_tuples_node)malloc(sizeof(sp_tuples_node));
-	nodes->next->row = row;
-	nodes->next->col = col;
-	nodes->next->value = val;
-	nodes=nodes->next;
-	tuples->nz++;}*/
-
-
-
-
-
-
-    return NULL;
+	fclose(f);
+    return tuples;
 }
 
 
@@ -115,7 +105,7 @@ void set_tuples(sp_tuples * mat_t, int row, int col, double value)
 	sp_tuples_node *nodes = mat_t->tuples_head;
 	sp_tuples_node *nodes_prev = nodes;
 	sp_tuples_node *nodes_next = nodes->next;
-	first_com = nodes->row * n +nodes->col;
+	first_com = nodes->row * n + nodes->col;
 	if(value != 0){
 		for(int i = 0;i<=nz;i++){
 			compare = nodes->row * n +nodes->col;
@@ -138,6 +128,7 @@ void set_tuples(sp_tuples * mat_t, int row, int col, double value)
 				new_nodes->value = value;
 				new_nodes->next = nodes;
 				mat_t->nz++;
+				first_com = new_nodes->row * n +new_nodes->col;
 				break;}
 			nodes_prev = nodes;
 			nodes = nodes->next;}}
