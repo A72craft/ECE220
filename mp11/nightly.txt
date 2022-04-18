@@ -5,9 +5,7 @@ Compilation Results:
 
 ****************************** VERIFICATION ******************************
 Circuit: 4 golden_modules, slicing tree size = 4 leaves and 3 internals
-(1) Function  'init_slicing_tree' : incorrect! +0
-    Golden: 32V1V0V
-    Yours : Invalid expression. Can't print. Please check your get_expression procedure.
+(1) Function  'init_slicing_tree' : correct!   +25
 (2) Function  'is_leaf'           : correct!   +5
 (3) Function  'is_internal'       : correct!   +5
 (4) Function  'is_in_subtree'     : correct!   +10
@@ -17,13 +15,13 @@ Circuit: 4 golden_modules, slicing tree size = 4 leaves and 3 internals
 (8) Procedure 'swap_topology'     : correct!   +10
 (9) Procedure 'get_expression'    : correct!   +15
 (10)Procedure 'get_total_resource': correct!   +5
-Your final score for this MP      : 65
+Your final score for this MP      : 90
 **************************** END VERIFICATION ****************************
 
 
-Failed the nightly test.
+Pass the nightly test!!!
 This nightly test is focusing on compilation error not functionality test.
 This nightly report only tests on the released testcases.
 There are many hidden edge testcase for the MP. Please test it yourselve.
 HIGHLY RECOMMEND YOU TO START YOUR MP EARLY!!!!!!!
-Timestamp: 2022-04-17_00:21:03
+Timestamp: 2022-04-18_00:21:33
