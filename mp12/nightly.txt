@@ -1,9 +1,34 @@
 Compilation Results:
 ********************
+ 
+
+ ------------------- Begin Verifying MP12 ---------------------
+Rectangle::getArea() incorrect 
+Rectangle::operator - incorrect 
+Circle::getArea() incorrect 
+Sphere::getArea() incorrect 
+Sphere::getVolume() incorrect 
+RectPrism::getArea() incorrect 
+RectPrism::getVolume() incorrect 
+Maxarea() or constructors are incorrect
+MaxVolume() or Constructors are incorrect
+CreateShape incorrect
+getName() 6/6
+Rectangle: 8/16
+Circle: 12/16
+Sphere: 8/16
+RectPrism: 8/16
+MaxArea(): 0/10
+MaxVolume(): 0/10
+CreateShape() 0/10
+Your total Score for MP12: 42/100
+-------------------- End Verifying MP12 ----------------------
+
+
 
 Failed the nightly test.
 This nightly test is focusing on compilation error not functionality test.
 This nightly report only tests on the released testcases.
 There are many hidden edge testcase for the MP. Please test it yourselve.
 HIGHLY RECOMMEND YOU TO START YOUR MP EARLY!!!!!!!
-Timestamp: 2022-04-23_01:17:11
+Timestamp: 2022-04-23_01:54:10
