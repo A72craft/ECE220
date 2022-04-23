@@ -1,3 +1,6 @@
+/*patner: jinj2 (me)
+*This is the head file that defines the class
+*/
 #ifndef SHAPE_H_
 #define SHAPE_H_
 
@@ -55,16 +58,20 @@ public:
 	}
 	
 	Rectangle<T> operator + (const Rectangle<T>& rec) {
-		width_ = width_+rec.getWidth();
-		length_ = length_+rec.getLength();
-		return Rectangle<T>(width_,length_);
+		T w;
+		T l;
+		w = width_+rec.getWidth();
+		l = length_+rec.getLength();
+		return Rectangle<T>(w,l);
 	}
 	
 	Rectangle<T> operator - (const Rectangle<T>& rec) {
 		int zero = 0;
-		width_ = max((T)zero,width_- rec.getWidth());
-		length_ = max((T)zero,length_-rec.getLength());
-		return Rectangle<T>(width_,length_);
+		T w;
+		T l;
+		w = max((T)zero,width_- rec.getWidth());
+		l = max((T)zero,length_-rec.getLength());
+		return Rectangle<T>(w,l);
 	} 
 	
 	T getWidth() const { 
@@ -100,13 +107,15 @@ public:
 	}
 	
   	Circle operator + (const Circle& cir){
-		radius_= radius_ + cir.getRadius();
-		return Circle(radius_);
+		double r;
+		r= radius_ + cir.getRadius();
+		return Circle(r);
 	}
 	
 	Circle operator - (const Circle& cir){
-		radius_= max(0.0,radius_ - cir.getRadius());
-		return Circle(radius_);
+		double r;
+		r= max(0.0,radius_ - cir.getRadius());
+		return Circle(r);
 	} 
 
 	double getRadius() const { 
@@ -132,7 +141,7 @@ public:
 	}
 
   	double getVolume() const {
-		return M_PI*(4/3)*pow(radius_,3);
+		return M_PI*(4.0/3.0)*pow(radius_,3);
 	}	
 	
   	double getArea() const {
@@ -140,13 +149,15 @@ public:
 	}
 
 	Sphere operator + (const Sphere& sph) {
-		radius_ = radius_ + sph.getRadius();
-		return Sphere(radius_);
+		double r;
+		r = radius_ + sph.getRadius();
+		return Sphere(r);
 	}
 
 	Sphere operator - (const Sphere& sph) {
-		radius_ = max(0.0,radius_ - sph.getRadius());
-		return Sphere(radius_);
+		double r;
+		r= max(0.0,radius_ - sph.getRadius());
+		return Sphere(r);
 	} 
 	
 	double getRadius() const {
@@ -179,17 +190,19 @@ public:
 	}
 	
 	RectPrism operator + (const RectPrism& rectp){
-		length_ = length_+rectp.getLength();
-		width_ = width_+rectp.getWidth();
-		height_ = height_+rectp.getHeight();
-		return RectPrism(width_,length_,height_);
+		double l,w,h;
+		l = length_+rectp.getLength();
+		w = width_+rectp.getWidth();
+		h = height_+rectp.getHeight();
+		return RectPrism(w,l,h);
 	}
 	
 	RectPrism operator - (const RectPrism& rectp){
-		length_ = max(0.0,length_-rectp.getLength());
-		width_ = max(0.0,width_-rectp.getWidth());
-		height_ = max(0.0,height_-rectp.getHeight());
-		return RectPrism(width_,length_,height_);
+		double l,w,h;
+		l = max(0.0,length_-rectp.getLength());
+		w = max(0.0,width_-rectp.getWidth());
+		h = max(0.0,height_-rectp.getHeight());
+		return RectPrism(w,l,h);
 	}	
 	
 	double getWidth() const { 
