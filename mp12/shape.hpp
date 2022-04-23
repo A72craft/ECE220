@@ -17,7 +17,7 @@ using namespace std;
 class Shape{
 public:
 	//Base class' constructor should be called in derived classes'
-	//constructor to initizlize Shape's private variable 
+	//constructor to initizlize Shape's private variable
   	Shape(string name) {
 		name_ = name;
 	}
@@ -62,8 +62,8 @@ public:
 	
 	Rectangle<T> operator - (const Rectangle<T>& rec) {
 		int zero = 0;
-		width_ = max((T) zero,width_ - rec.getWidth());
-		length_ = max((T) zero,length_ - rec.getLength());
+		width_ = max((T)zero,width_- rec.getWidth());
+		length_ = max((T)zero,length_-rec.getLength());
 		return Rectangle<T>(width_,length_);
 	} 
 	
@@ -92,7 +92,7 @@ public:
 	}
 	
   	double getArea() const{
-		return radius_ * radius_ * M_PI;
+		return (radius_ * radius_ * M_PI);
 	}
 	
  	double getVolume() const{
@@ -214,37 +214,33 @@ private:
 // Return a vector of pointers that points to the objects 
 static list<Shape*> CreateShapes(char* file_name) {
 	//@@Insert your code here
-	list<Shape*> mylist;
-	list<Shape*>::iterator it = mylist.begin();
+	list<Shape*> shapes;
 	string name;
-	int a,b,c;
+	double a,b,c;
 	int num;
 	ifstream ifs (file_name, std::ifstream::in);
 	ifs >> num;
+	//list<Shape*>::iterator it = shapes.begin();
 	for(int i = 0;i<num;i++){
 		ifs >> name;
 		if(name == "RectPrism"){
 			ifs >> a >> b >> c;
 			Shape* shape_ptr = new RectPrism(a,b,c);
-			*it = shape_ptr;
-			it++;}
+			shapes.push_back(shape_ptr);}
 		else if(name == "Circle"){
 			ifs >> a;
 			Shape* shape_ptr = new Circle(a);
-			*it = shape_ptr;
-			it++;}
+			shapes.push_back(shape_ptr);}
 		else if(name == "Sphere"){
 			ifs >> a;
 			Shape* shape_ptr = new Sphere(a);
-			*it = shape_ptr;
-			it++;}
+			shapes.push_back(shape_ptr);}
 		else if(name == "Rectangle"){
 			ifs >> a >> b;
 			Shape* shape_ptr = new Rectangle<int>(a,b);
-			*it = shape_ptr;
-			it++;}}
+			shapes.push_back(shape_ptr);}}
 	ifs.close();
-	return list<Shape*> (0,NULL);
+	return shapes;
 }
 
 // call getArea() of each object 
@@ -252,7 +248,10 @@ static list<Shape*> CreateShapes(char* file_name) {
 static double MaxArea(list<Shape*> shapes){
 	double max_area = 0;
 	//@@Insert your code here
-
+	for (list<Shape*>::iterator it = shapes.begin(); it != shapes.end(); it++) {
+    	if((*it)->getArea()>max_area)
+			max_area = (*it)->getArea();
+}
 	
 	return max_area;
 }
@@ -262,7 +261,10 @@ static double MaxArea(list<Shape*> shapes){
 static double MaxVolume(list<Shape*> shapes){
 	double max_volume = 0;
 	//@@Insert your code here
-
+	for (list<Shape*>::iterator it = shapes.begin(); it != shapes.end(); it++) {
+    	if((*it)->getVolume()>max_volume)
+			max_volume = (*it)->getVolume();
+}
 	
 	return max_volume;
 }
